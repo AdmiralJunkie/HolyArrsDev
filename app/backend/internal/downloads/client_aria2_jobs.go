@@ -236,6 +236,11 @@ func a2State(s a2Status) (string, string) {
 		return StateQueued, "waiting"
 	case s.Status == "paused":
 		return StatePaused, "paused"
+	case s.Status == "complete" && isMeta(s):
+		// The torrent file is in; the files it names start next. Until the
+		// Downloader lists that job, the download itself is not done: reading
+		// it as finished would stop HolyArrs following it.
+		return StateDownloading, "metadata"
 	case s.Status == "complete":
 		return StateFinished, "complete"
 	case s.Status == "error" && s.ErrorCode == "12":
@@ -263,11 +268,12 @@ func (a *Aria2) job(s a2Status) Job {
 	}
 	progress := float64(0)
 	// A metadata job downloads the torrent file, not the files it names: its
-	// length says nothing about the download, so it never reads as done.
+	// length says nothing about the download, so it never reads as done, even
+	// when aria2 reports it complete.
 	if total > 0 && !isMeta(s) {
 		progress = max(0, min(1, float64(done)/float64(total)))
 	}
-	if s.Status == "complete" {
+	if s.Status == "complete" && !isMeta(s) {
 		progress = 1
 	}
 	eta := int64(0)
