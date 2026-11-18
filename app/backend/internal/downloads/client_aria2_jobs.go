@@ -128,6 +128,19 @@ func pick(group []a2Status) (a2Status, bool) {
 	if len(fresh) > 0 {
 		kept = fresh
 	}
+	// The metadata job of a magnet can still run while the content job it
+	// made already waits its turn. The content job is the torrent, so it is
+	// preferred whatever state it is in: the metadata job's length is the
+	// torrent file's, and its progress reads as done long before the files are.
+	real := []a2Status{}
+	for _, s := range kept {
+		if !isMeta(s) {
+			real = append(real, s)
+		}
+	}
+	if len(real) > 0 {
+		kept = real
+	}
 	rank := func(s a2Status) int {
 		switch s.Status {
 		case "active":
@@ -249,7 +262,9 @@ func (a *Aria2) job(s a2Status) Job {
 		name = strings.ToLower(s.InfoHash)
 	}
 	progress := float64(0)
-	if total > 0 {
+	// A metadata job downloads the torrent file, not the files it names: its
+	// length says nothing about the download, so it never reads as done.
+	if total > 0 && !isMeta(s) {
 		progress = max(0, min(1, float64(done)/float64(total)))
 	}
 	if s.Status == "complete" {
