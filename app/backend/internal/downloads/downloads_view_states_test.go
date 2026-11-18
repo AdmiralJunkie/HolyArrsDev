@@ -99,3 +99,22 @@ func TestSeenName(t *testing.T) {
 		t.Errorf("loose files with no folder: %q", got)
 	}
 }
+
+// A download a person removed leaves the Downloads list (History keeps its
+// row), and the Downloader still listing it for a moment must not bring it
+// back as a client row.
+func TestDownloadsViewHidesARemovedDownload(t *testing.T) {
+	t.Parallel()
+	x := seed41(t, mediafiles.SlotInLibrary, "cleaned")
+	outside := `{"hash":"1212121212121212121212121212121212121212","name":"Other.App","category":"linux","size":500,"progress":0.5,"state":"downloading","added_on":1700000100}`
+	pointQB(t, x, qbList(t, `[{"hash":"ABCDABCDABCDABCDABCDABCDABCDABCDABCDABCD","name":"Salt.Choir","category":"holyarrs","size":1000,"progress":1,"upspeed":9,"state":"uploading"},`+outside+`]`).URL)
+	feedStore(t, x.dl)
+	v := view(t, x.srv.URL+"/api/v1/downloads/view")
+	if len(v.Downloads) != 1 || v.Downloads[0].Hash != "1212121212121212121212121212121212121212" || v.OutsideTotal != 1 {
+		t.Fatalf("rows %d outside %d: %+v", len(v.Downloads), v.OutsideTotal, v.Downloads)
+	}
+	var state string
+	if err := x.s.Read().QueryRow("SELECT state FROM downloads WHERE id = ?", x.dlID).Scan(&state); err != nil || state != "cleaned" {
+		t.Fatalf("the row for History: %q %v", state, err)
+	}
+}

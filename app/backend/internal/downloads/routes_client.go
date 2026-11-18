@@ -179,12 +179,16 @@ func finishedShare(detail string) string {
 }
 
 // knownTitles names the client items HolyArrs already knows by hash (its
-// own downloads older than the list), and drops their outside mark.
-func (a *Web) knownTitles(ctx context.Context, downloaderID int64, rows []DownloadRow) {
+// own downloads older than the list), and drops their outside mark. It
+// returns the hashes whose only HolyArrs download is gone (cleaned up): the
+// Downloader may still list such a job for a moment, and it must not come
+// back as a client row of its own.
+func (a *Web) knownTitles(ctx context.Context, downloaderID int64, rows []DownloadRow) map[string]bool {
 	at := map[string]int{}
 	for i, r := range rows {
 		at[r.Hash] = i
 	}
+	gone := map[string]bool{}
 	hashes := make([]string, 0, len(rows))
 	for h := range at {
 		hashes = append(hashes, h)
@@ -203,12 +207,24 @@ func (a *Web) knownTitles(ctx context.Context, downloaderID int64, rows []Downlo
 			continue
 		}
 		first, relIDs := []int64{}, []int64{}
+		cleaned, live := map[string]bool{}, map[string]bool{}
 		for _, d := range ds {
+			h := strings.ToLower(d.ExternalID)
+			if d.State == "cleaned" {
+				cleaned[h] = true
+			} else {
+				live[h] = true
+			}
 			if len(d.SlotIDs) > 0 {
 				first = append(first, d.SlotIDs[0])
 			}
 			if d.ReleaseID != nil {
 				relIDs = append(relIDs, *d.ReleaseID)
+			}
+		}
+		for h := range cleaned {
+			if !live[h] {
+				gone[h] = true
 			}
 		}
 		slots := slotInfos(ctx, db, first)
@@ -236,6 +252,23 @@ func (a *Web) knownTitles(ctx context.Context, downloaderID int64, rows []Downlo
 			}
 		}
 	}
+	return gone
+}
+
+// goneRows drops the client rows of hashes HolyArrs removed: its own row is
+// gone from the Downloads list, and the Downloader's copy must not take its
+// place as an outside row.
+func goneRows(rows []DownloadRow, gone map[string]bool) []DownloadRow {
+	if len(gone) == 0 {
+		return rows
+	}
+	kept := rows[:0]
+	for _, r := range rows {
+		if !gone[strings.ToLower(r.Hash)] {
+			kept = append(kept, r)
+		}
+	}
+	return kept
 }
 
 // Client item routes: the client controls, addressed by Downloader id and
