@@ -558,7 +558,7 @@ func (s *Service) SetEpisode(ctx context.Context, itemID int64, keep bool, by do
 
 // SeasonSummary is one season of a show with its episode counts.
 type SeasonSummary struct {
-	Issues       []StatusIssue `json:"issues,omitempty"`
+	Issues       []StatusIssue `json:"-"`
 	Number       int           `json:"number"`
 	Name         string        `json:"name"`
 	KeepUpToDate bool          `json:"keep_up_to_date"`

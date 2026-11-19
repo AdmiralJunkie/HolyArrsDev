@@ -17,6 +17,7 @@ export type LibTone = 'ok' | 'info' | 'wait' | 'fail' | 'idle';
 export interface LibState {
 	key: LibStateKey;
 	label: string;
+	detail?: string;
 	tone: LibTone;
 	icon: IconName;
 	pill: StatusKind;
@@ -162,5 +163,8 @@ function issueState(slots: { state: string; reason?: string }[]): LibState | nul
  const labels = [...new Set(issues.map((s) => s.reason?.trim()
   ? serverWords(s.reason.trim())
   : tr(s.state === 'failed' ? 'mediafiles.state.failureReasonMissing' : 'mediafiles.state.decisionReasonMissing')))];
- return make(failed ? 'failed' : 'needs_decision', labels.join('; '));
+ const summaries = issues.map((s) => s.reason?.startsWith("HolyArrs can't find the downloaded file where the Downloader says it is;")
+  ? tr('mediafiles.state.downloadedFileMissing')
+  : s.reason?.trim() ? serverWords(s.reason.trim()) : tr(s.state === 'failed' ? 'mediafiles.state.failureReasonMissing' : 'mediafiles.state.decisionReasonMissing'));
+ return { ...make(failed ? 'failed' : 'needs_decision', [...new Set(summaries)].join('; ')), detail: labels.join('\n') };
 }

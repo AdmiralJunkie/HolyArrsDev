@@ -75,3 +75,10 @@ describe('library issue explanations', () => {
   expect(label(movie([slot('failed', {reason:'  '})]))).toContain('no reason recorded');
  });
 });
+
+it('summarizes missing download paths while preserving the repair instructions', () => {
+ const reason = "HolyArrs can't find the downloaded file where the Downloader says it is; check the path pair in Settings > Downloaders and that the download folder is mounted, then import again";
+ const s = libraryState(movie([slot('needs_a_decision', { reason })]), now);
+ expect(s?.label).toBe('Downloaded file not found');
+ expect(s?.detail).toBe(reason);
+});
