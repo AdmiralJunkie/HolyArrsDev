@@ -49,6 +49,9 @@ func collectionEntries(ents []os.DirEntry, shared bool) []string {
 		}
 		files = append(files, e.Name())
 		name, year := FolderName(candidateLookup(e.Name()))
+		if year == 0 {
+			name, year = collectionReleaseFacts(strings.TrimSuffix(e.Name(), path.Ext(e.Name())))
+		}
 		if !shared && (year == 0 || name == "") {
 			continue
 		}
