@@ -87,8 +87,9 @@ type dlOwn struct {
 func (a *Web) ownRows(ctx context.Context, id int64, keys []string, people bool) dlOwn {
 	o := dlOwn{keys: map[string]bool{}, users: map[string]map[int64]bool{}}
 	db := a.read()
-	// The same list the view shows: the newest 100 downloads.
-	if rs, err := db.QueryContext(ctx, "SELECT downloader_id, external_id FROM downloads ORDER BY id DESC LIMIT 100"); err == nil {
+	// The same list the view shows: the newest 100 live downloads. A cleaned
+	// row is not on the page, even when the Downloader still lists its job.
+	if rs, err := db.QueryContext(ctx, "SELECT downloader_id, external_id FROM downloads WHERE state <> 'cleaned' ORDER BY id DESC LIMIT 100"); err == nil {
 		for rs.Next() {
 			var did int64
 			var ext string

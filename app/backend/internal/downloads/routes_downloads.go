@@ -326,7 +326,9 @@ func (a *Web) DownloadsView(w http.ResponseWriter, r *http.Request) {
 	who, ok := webserver.From(r.Context())
 	manage := !ok || who.Has(webserver.PermManageLibrary)
 	// A download a person removed leaves the list; its row stays for History.
-	// Its Downloader's copy is kept off the client rows below (see knownTitles).
+	// Its Downloader's copy is kept off the client rows below while the removal
+	// is pending or new, and after that shows as an outside row (see
+	// knownTitles).
 	where, args := "state <> 'cleaned'", []any{}
 	// People who approve read the downloads of every approved ask on the
 	// Requests page (?asked=1), as they read everyone's asks there;
