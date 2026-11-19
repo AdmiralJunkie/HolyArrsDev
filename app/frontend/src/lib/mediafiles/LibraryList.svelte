@@ -478,7 +478,7 @@
 												{#if phone}{@const fc = rowCols.find((c) => !isProgressCol(c)) ?? rowCols[0]}<span class="lsub"><PersonText text={[ls?.label, fc ? rowCell(t, fc, p, seriesOf(t)) : ''].filter(Boolean).join(' · ')} /></span>{/if}
 											</span>
 											{#if !phone}
-												<span class="ls {ls?.tone ?? 'idle'}" data-testid="library-status" data-state={ls?.key}><i class="dot" aria-hidden="true"></i>{ls?.label ?? '—'}</span>
+												<span class="ls {ls?.tone ?? 'idle'}" title={ls?.label} data-testid="library-status" data-state={ls?.key}><i class="dot" aria-hidden="true"></i>{ls?.label ?? '—'}</span>
 												{#each rowCols as c (c.id)}<span class="lc" title={c.id === 'path' ? cell(t, c, seriesOf(t)) : undefined}><PersonText text={rowCell(t, c, p, seriesOf(t)) || '—'} /></span>{/each}
 												<span class="acts">
 													{#if canManage && !selecting}
@@ -503,14 +503,14 @@
 												<a href={openLink(t)} tabindex="-1" title={t.name} dir="auto">{t.name}</a>
 												<span class="sub">
 													{#if kind === 'all'}{kindLabel(t.kind)}{#if t.year} · {t.year}{/if}{#if sort.key === 'score' && !phone && scoreText(t)} · ★ {scoreText(t)}{/if}{/if}
-													{#if ls && (kind === 'all' || phone || !shownCols.some((c) => c.id === 'status'))}<span class="ls {ls.tone}" data-testid="library-status" data-state={ls.key}><i class="dot" aria-hidden="true"></i>{ls.label}</span>{/if}
+													{#if ls && (kind === 'all' || phone || !shownCols.some((c) => c.id === 'status'))}<span class="ls {ls.tone}" title={ls?.label} data-testid="library-status" data-state={ls.key}><i class="dot" aria-hidden="true"></i>{ls.label}</span>{/if}
 												</span>
 												{#if phone}<span class="facts"><PersonText text={factCols.slice(0, 3).map((c) => (isProgressCol(c) ? `${p.have}/${p.total}` : cell(t, c, seriesOf(t)))).filter(Boolean).join(' · ')} /></span>{/if}
 											</span>
 											{#if kind !== 'all'}
 												{#each shownCols as c (c.id)}
 													{#if c.id === 'status'}
-														<span class="c lstate {ls?.tone ?? 'idle'}" data-testid="library-status" data-state={ls?.key}>
+														<span class="c lstate {ls?.tone ?? 'idle'}" title={ls?.label} data-testid="library-status" data-state={ls?.key}>
 															{#if ls}
 																<span class="ls-line ls {ls.tone}"><i class="dot" aria-hidden="true"></i><span class="ls-t">{ls.label}</span></span>
 																{#if ls.percent !== undefined}<span class="meter ls-bar" aria-hidden="true"><i style="width: {ls.percent}%"></i></span>{/if}
