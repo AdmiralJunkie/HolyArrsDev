@@ -1579,5 +1579,7 @@
 	"server.suggest.trending-shows-on-streaming": "Trendy serier på strømming",
 	"server.suggest.trending-on-streaming": "Trendy på strømming",
 	"server.discover.popular": "Populært",
-	"server.metadata.creator": "Skaper"
+	"server.metadata.creator": "Skaper",
+	"server.accounts.an-admin-invite-works-once-and": "en admin-invitasjon fungerer én gang og har en sluttdato",
+	"server.accounts.an-invite-takes-1-to-people": "en invitasjon gjelder for 1 til {maxinviteuses} personer, eller 0 for ingen grense"
 }

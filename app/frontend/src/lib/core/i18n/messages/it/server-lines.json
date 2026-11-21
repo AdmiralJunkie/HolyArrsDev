@@ -1579,5 +1579,7 @@
 	"server.suggest.trending-shows-on-streaming": "Serie di tendenza in streaming",
 	"server.suggest.trending-on-streaming": "Di tendenza in streaming",
 	"server.discover.popular": "Popolari",
-	"server.metadata.creator": "Ideatore"
+	"server.metadata.creator": "Ideatore",
+	"server.accounts.an-admin-invite-works-once-and": "un invito per amministratore funziona una volta e ha una data di fine",
+	"server.accounts.an-invite-takes-1-to-people": "un invito accetta da 1 a {maxinviteuses} persone, oppure 0 per nessun limite"
 }

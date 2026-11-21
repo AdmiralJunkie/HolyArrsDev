@@ -1579,5 +1579,7 @@
 	"server.suggest.trending-shows-on-streaming": "Populiarūs serialai srautinėse platformose",
 	"server.suggest.trending-on-streaming": "Populiaru srautinėse platformose",
 	"server.discover.popular": "Populiaru",
-	"server.metadata.creator": "Kūrėjas"
+	"server.metadata.creator": "Kūrėjas",
+	"server.accounts.an-admin-invite-works-once-and": "administratoriaus kvietimas veikia vieną kartą ir turi pabaigos datą",
+	"server.accounts.an-invite-takes-1-to-people": "kvietimas skirtas nuo 1 iki {maxinviteuses} žmonių arba 0, jei limito nėra"
 }

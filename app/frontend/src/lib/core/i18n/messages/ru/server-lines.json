@@ -1579,5 +1579,7 @@
 	"server.suggest.trending-shows-on-streaming": "Сериалы в тренде на стримингах",
 	"server.suggest.trending-on-streaming": "В тренде на стримингах",
 	"server.discover.popular": "Популярные",
-	"server.metadata.creator": "Создатель"
+	"server.metadata.creator": "Создатель",
+	"server.accounts.an-admin-invite-works-once-and": "приглашение администратора работает один раз и имеет дату окончания",
+	"server.accounts.an-invite-takes-1-to-people": "приглашение рассчитано на 1–{maxinviteuses} чел. или 0, если без ограничения"
 }

@@ -1579,5 +1579,7 @@
 	"server.suggest.trending-shows-on-streaming": "Trendy seriály ve streamování",
 	"server.suggest.trending-on-streaming": "Trendy ve streamování",
 	"server.discover.popular": "Oblíbené",
-	"server.metadata.creator": "Tvůrce"
+	"server.metadata.creator": "Tvůrce",
+	"server.accounts.an-admin-invite-works-once-and": "pozvánka pro správce funguje jednou a má datum konce",
+	"server.accounts.an-invite-takes-1-to-people": "pozvánka je pro 1 až {maxinviteuses} lidí, nebo 0 pro žádné omezení"
 }

@@ -1579,5 +1579,7 @@
 	"server.suggest.trending-shows-on-streaming": "Siri sedang tren di strim",
 	"server.suggest.trending-on-streaming": "Sedang tren di strim",
 	"server.discover.popular": "Popular",
-	"server.metadata.creator": "Pencipta"
+	"server.metadata.creator": "Pencipta",
+	"server.accounts.an-admin-invite-works-once-and": "jemputan pentadbir hanya sekali dan mempunyai tarikh tamat",
+	"server.accounts.an-invite-takes-1-to-people": "jemputan menerima 1 hingga {maxinviteuses} orang, atau 0 untuk tiada had"
 }

@@ -1579,5 +1579,7 @@
 	"server.suggest.trending-shows-on-streaming": "配信でトレンドの番組",
 	"server.suggest.trending-on-streaming": "配信でトレンド",
 	"server.discover.popular": "人気",
-	"server.metadata.creator": "原作者"
+	"server.metadata.creator": "原作者",
+	"server.accounts.an-admin-invite-works-once-and": "管理者の招待は 1 回だけ使え、期限があります",
+	"server.accounts.an-invite-takes-1-to-people": "招待できる人数は 1 ~ {maxinviteuses} 人、無制限にするには 0 です"
 }

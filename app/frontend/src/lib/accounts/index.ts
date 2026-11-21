@@ -23,6 +23,8 @@ export { default as SigninWait } from './SigninWait.svelte';
 export { default as SigninTiles } from './SigninTiles.svelte';
 export { default as SigninServerForm } from './SigninServerForm.svelte';
 export { default as SigninRecent } from './SigninRecent.svelte';
+export { default as InviteLinks } from './InviteLinks.svelte';
+export type { Invite } from './InviteLinks.svelte';
 export { default as LocalSkipCard } from './LocalSkipCard.svelte';
 export { default as SsoCard } from './SsoCard.svelte';
 export { default as Table } from './Table.svelte';

@@ -1579,5 +1579,7 @@
 	"server.suggest.trending-shows-on-streaming": "스트리밍 인기 TV 시리즈",
 	"server.suggest.trending-on-streaming": "스트리밍 인기 급상승",
 	"server.discover.popular": "인기순",
-	"server.metadata.creator": "제작자"
+	"server.metadata.creator": "제작자",
+	"server.accounts.an-admin-invite-works-once-and": "관리자 초대는 한 번만 사용할 수 있고 종료일이 있습니다",
+	"server.accounts.an-invite-takes-1-to-people": "초대는 1~{maxinviteuses}명까지 받을 수 있으며, 제한을 두지 않으려면 0입니다"
 }

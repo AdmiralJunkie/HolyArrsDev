@@ -1579,5 +1579,7 @@
 	"server.suggest.trending-shows-on-streaming": "流媒體熱播影集",
 	"server.suggest.trending-on-streaming": "流媒體熱播",
 	"server.discover.popular": "熱門",
-	"server.metadata.creator": "創作者"
+	"server.metadata.creator": "創作者",
+	"server.accounts.an-admin-invite-works-once-and": "管理員邀請只能使用一次，並且有截止日期",
+	"server.accounts.an-invite-takes-1-to-people": "邀請可接受 1 到 {maxinviteuses} 人，0 表示不限"
 }

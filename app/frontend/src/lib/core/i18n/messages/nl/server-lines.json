@@ -1579,5 +1579,7 @@
 	"server.suggest.trending-shows-on-streaming": "Trending series op streaming",
 	"server.suggest.trending-on-streaming": "Trending op streaming",
 	"server.discover.popular": "Populair",
-	"server.metadata.creator": "Maker"
+	"server.metadata.creator": "Maker",
+	"server.accounts.an-admin-invite-works-once-and": "een uitnodiging voor een beheerder werkt één keer en heeft een einddatum",
+	"server.accounts.an-invite-takes-1-to-people": "een uitnodiging is voor 1 tot {maxinviteuses} personen, of 0 voor geen limiet"
 }

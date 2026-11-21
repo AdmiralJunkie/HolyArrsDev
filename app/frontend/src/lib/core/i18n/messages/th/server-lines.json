@@ -1579,5 +1579,7 @@
 	"server.suggest.trending-shows-on-streaming": "ซีรีส์ที่กำลังมาแรงบนสตรีมมิง",
 	"server.suggest.trending-on-streaming": "กำลังมาแรงบนสตรีมมิง",
 	"server.discover.popular": "ยอดนิยม",
-	"server.metadata.creator": "ผู้สร้าง"
+	"server.metadata.creator": "ผู้สร้าง",
+	"server.accounts.an-admin-invite-works-once-and": "คำเชิญผู้ดูแลใช้ได้ครั้งเดียวและมีวันสิ้นสุด",
+	"server.accounts.an-invite-takes-1-to-people": "คำเชิญรับได้ 1 ถึง {maxinviteuses} คน หรือ 0 หากไม่จำกัด"
 }

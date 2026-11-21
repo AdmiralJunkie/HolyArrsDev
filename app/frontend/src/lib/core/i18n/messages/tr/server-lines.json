@@ -1579,5 +1579,7 @@
 	"server.suggest.trending-shows-on-streaming": "Yayın servislerinde öne çıkan diziler",
 	"server.suggest.trending-on-streaming": "Yayın servislerinde öne çıkanlar",
 	"server.discover.popular": "Popüler",
-	"server.metadata.creator": "Yaratıcı"
+	"server.metadata.creator": "Yaratıcı",
+	"server.accounts.an-admin-invite-works-once-and": "yönetici daveti bir kez çalışır ve bitiş tarihi vardır",
+	"server.accounts.an-invite-takes-1-to-people": "bir davet 1 ile {maxinviteuses} arası kişi alır, sınır olmaması için 0"
 }

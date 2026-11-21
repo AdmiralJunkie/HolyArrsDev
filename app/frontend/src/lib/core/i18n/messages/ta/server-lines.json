@@ -1579,5 +1579,7 @@
 	"server.suggest.trending-shows-on-streaming": "ஸ்ட்ரீமிங்கில் டிரெண்டிங் தொடர்கள்",
 	"server.suggest.trending-on-streaming": "ஸ்ட்ரீமிங்கில் டிரெண்டிங்",
 	"server.discover.popular": "பிரபலமானவை",
-	"server.metadata.creator": "படைப்பாளர்"
+	"server.metadata.creator": "படைப்பாளர்",
+	"server.accounts.an-admin-invite-works-once-and": "நிர்வாகி அழைப்பு ஒருமுறை மட்டுமே செயல்படும், அதற்கு முடிவுத் தேதி உண்டு",
+	"server.accounts.an-invite-takes-1-to-people": "அழைப்பு 1 முதல் {maxinviteuses} பேரை ஏற்கும், அல்லது வரம்பு இல்லாமல் இருக்க 0"
 }

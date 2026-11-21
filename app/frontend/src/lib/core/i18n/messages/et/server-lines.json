@@ -1579,5 +1579,7 @@
 	"server.suggest.trending-shows-on-streaming": "Menukad sarjad voogedastuses",
 	"server.suggest.trending-on-streaming": "Menukas voogedastuses",
 	"server.discover.popular": "Populaarsed",
-	"server.metadata.creator": "Looja"
+	"server.metadata.creator": "Looja",
+	"server.accounts.an-admin-invite-works-once-and": "administraatori kutse kehtib üks kord ja sellel on lõppkuupäev",
+	"server.accounts.an-invite-takes-1-to-people": "kutse on 1 kuni {maxinviteuses} inimesele või 0, kui piirangut pole"
 }

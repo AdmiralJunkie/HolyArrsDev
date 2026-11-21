@@ -1579,5 +1579,7 @@
 	"server.suggest.trending-shows-on-streaming": "Vinsælir þættir á streymi",
 	"server.suggest.trending-on-streaming": "Vinsælt á streymi",
 	"server.discover.popular": "Vinsælt",
-	"server.metadata.creator": "Höfundur"
+	"server.metadata.creator": "Höfundur",
+	"server.accounts.an-admin-invite-works-once-and": "boð fyrir stjórnanda virkar einu sinni og hefur lokadagsetningu",
+	"server.accounts.an-invite-takes-1-to-people": "boð tekur við 1 til {maxinviteuses} manns, eða 0 fyrir engin takmörk"
 }

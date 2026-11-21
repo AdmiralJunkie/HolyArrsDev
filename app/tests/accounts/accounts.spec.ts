@@ -442,3 +442,43 @@ test('a save on a host name HolyArrs does not know says why and where to add the
 	await expect(page).toHaveURL(/\/login/);
 	await page.context().close();
 });
+
+test('the owner shares one link that two people join through, then takes it back', async ({ browser }) => {
+	await own.goto('/settings/users');
+	await own.getByRole('button', { name: 'Invite someone' }).click();
+	await own.getByLabel('Note for yourself').fill('Family');
+	// The options for a shared link are folded away under More options.
+	await own.locator('#inv-more summary').click();
+	await own.getByLabel('People who can join').fill('0');
+	// 0 days is a link with no end date.
+	await own.getByLabel('Days the link lasts').fill('0');
+	await own.getByRole('button', { name: 'Make an invite link' }).click();
+	await expect(own.locator('.fresh')).toContainText('shown only once');
+	const link = (await own.locator('.fresh code').textContent())!.trim();
+
+	for (const name of ['famone', 'famtwo']) {
+		const p = await fresh(browser);
+		await p.goto(new URL(link).pathname);
+		await p.getByLabel('Name').fill(name);
+		await p.getByLabel('Password', { exact: true }).fill(memberPw);
+		await p.getByLabel('Confirm password').fill(memberPw);
+		await p.getByRole('button', { name: 'Join and sign in' }).click();
+		await expect(p).toHaveURL(/\/$/);
+		await p.context().close();
+	}
+
+	await own.reload();
+	const row = own.locator('#invites-card li', { hasText: 'Family' });
+	await expect(row).toContainText('Open, no end date');
+	await expect(row).toContainText('Joined: 2 (famone, famtwo)');
+
+	// Taking it back ends the link but keeps who joined.
+	await row.getByRole('button', { name: 'Revoke' }).click();
+	await expect(row).toContainText('Ended');
+	await expect(row).toContainText('Joined: 2 (famone, famtwo)');
+	await expect(row.getByRole('button', { name: 'Revoke' })).toHaveCount(0);
+	const late = await fresh(browser);
+	await late.goto(new URL(link).pathname);
+	await expect(late.getByRole('alert')).toContainText('used up');
+	await late.context().close();
+});

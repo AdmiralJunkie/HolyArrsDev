@@ -1579,5 +1579,7 @@
 	"server.suggest.trending-shows-on-streaming": "Trending na show sa streaming",
 	"server.suggest.trending-on-streaming": "Trending sa streaming",
 	"server.discover.popular": "Sikat",
-	"server.metadata.creator": "Creator"
+	"server.metadata.creator": "Creator",
+	"server.accounts.an-admin-invite-works-once-and": "isang beses lang gumagana ang imbitasyon para sa admin at may petsa ng pagtatapos",
+	"server.accounts.an-invite-takes-1-to-people": "tumatanggap ang imbitasyon ng 1 hanggang {maxinviteuses} tao, o 0 para walang limitasyon"
 }

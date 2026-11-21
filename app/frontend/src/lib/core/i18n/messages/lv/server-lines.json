@@ -1579,5 +1579,7 @@
 	"server.suggest.trending-shows-on-streaming": "Tendencēs seriāli straumēšanā",
 	"server.suggest.trending-on-streaming": "Tendences straumēšanā",
 	"server.discover.popular": "Populārs",
-	"server.metadata.creator": "Veidotājs"
+	"server.metadata.creator": "Veidotājs",
+	"server.accounts.an-admin-invite-works-once-and": "admina ielūgums darbojas vienreiz, un tam ir beigu datums",
+	"server.accounts.an-invite-takes-1-to-people": "ielūgums ir paredzēts no 1 līdz {maxinviteuses} cilvēkiem vai 0, ja ierobežojuma nav"
 }

@@ -1579,5 +1579,7 @@
 	"server.suggest.trending-shows-on-streaming": "Serije u trendu na streamingu",
 	"server.suggest.trending-on-streaming": "U trendu na streamingu",
 	"server.discover.popular": "Popularno",
-	"server.metadata.creator": "Autor"
+	"server.metadata.creator": "Autor",
+	"server.accounts.an-admin-invite-works-once-and": "pozivnica za administratora radi jednom i ima datum završetka",
+	"server.accounts.an-invite-takes-1-to-people": "pozivnica prima od 1 do {maxinviteuses} osoba ili 0 za bez ograničenja"
 }

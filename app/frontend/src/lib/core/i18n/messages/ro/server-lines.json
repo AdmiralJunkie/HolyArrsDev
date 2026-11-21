@@ -1579,5 +1579,7 @@
 	"server.suggest.trending-shows-on-streaming": "Seriale în trend pe streaming",
 	"server.suggest.trending-on-streaming": "În trend pe streaming",
 	"server.discover.popular": "Populare",
-	"server.metadata.creator": "Creator"
+	"server.metadata.creator": "Creator",
+	"server.accounts.an-admin-invite-works-once-and": "o invitație de administrator funcționează o singură dată și are o dată de sfârșit",
+	"server.accounts.an-invite-takes-1-to-people": "o invitație primește între 1 și {maxinviteuses} persoane, sau 0 pentru fără limită"
 }

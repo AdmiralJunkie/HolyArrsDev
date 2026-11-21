@@ -89,6 +89,7 @@ var tableOwner = map[string]string{
 	"api_keys":                "accounts",
 	"backup_codes":            "accounts",
 	"invites":                 "accounts",
+	"invite_uses":             "accounts",
 	"known_places":            "accounts",
 	"sso_links":               "accounts",
 	"user_links":              "accounts",
