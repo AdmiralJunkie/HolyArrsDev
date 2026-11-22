@@ -110,7 +110,6 @@
 	const labels = $derived<Record<Card['type'], string>>({ show: t('discover.search.tvShows'), movie: t('discover.search.movies'), music: t('discover.search.music'), people: t('discover.search.people') });
 	const order = $derived(scopeOptions.map((o) => o.value).filter((v): v is Card['type'] => v !== 'all'));
 
-
 	let lib = $state<LibraryAnswer | null>(null);
 	// Search in plain words: asked only when the words describe a title.
 	let plainAns = $state<PlainAnswer | null>(null);
@@ -266,7 +265,6 @@
 		scope = s;
 		void run();
 	}
-
 
 	// Back restores Search exactly. The answers come from `kept` (no refetch, no entry animation); the snapshot holds the spot: scroll, loaded Browse sections and rows, people pages and the chip. The scroll comes back once the page is tall enough.
 	const kept0 = kept && kept.key === entryKey() ? (kept.data as ReturnType<typeof keep>) : null;
