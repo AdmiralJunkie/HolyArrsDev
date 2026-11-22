@@ -185,6 +185,24 @@ test('add a movie with a second 4K Version; the Movie page shows both and can ad
 	await expect(page.getByRole('button', { name: /^Version actions for Main/ })).toHaveCount(0);
 });
 
+test('Back restores the query and results after opening a movie from Search', async () => {
+	for (const { title, detailUrl } of [
+		{ title: 'Driftwood Moon', detailUrl: /\/library\/\d+/ },
+		{ title: 'Iron Lullaby', detailUrl: /\/title\/movie\/900011/ }
+	]) {
+		await page.goto('/search');
+		const box = page.getByTestId('search-box');
+		await box.fill(title);
+		const card = page.getByRole('main').getByRole('link', { name: new RegExp('^' + title + ',') }).first();
+		await expect(card).toBeVisible();
+		await card.click();
+		await expect(page).toHaveURL(detailUrl);
+		await page.goBack();
+		await expect(box).toHaveValue(title);
+		await expect(card).toBeVisible();
+	}
+});
+
 test('the top-bar search opens Search with Library results; a movie not in the Library opens its details with Add', async () => {
 	await page.goto('/');
 	// The one search field sits in the top bar; typing opens the Search page with the words.

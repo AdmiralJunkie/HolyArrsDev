@@ -48,9 +48,10 @@
 
 	// Search is a page; its one field is the top bar's (on phones, where the top bar is hidden, a copy sits at the page top). The words and the scope live in the address (?q=, ?kind=). Before typing it shows recent searches (this device, per user) and the Browse grid (genres and their moods, per tab); a mood tile opens a mood view here (?mood=&genre=&type=). Results come in as you type. Kid limits are applied by the server on every lookup.
 
-	// The words live in the shared field (top bar); a direct link fills it from ?q=.
-	if (!searchField.term.trim()) searchField.term = page.url.searchParams.get('q') ?? '';
-	let scope = $state<SearchScope>(readScope(page.url.searchParams.get('kind')));
+	// Back can restore a shallow address with the query typed after Search opened.
+	const initialAddress = page.shallow?.url ?? page.url;
+	if (!searchField.term.trim()) searchField.term = initialAddress.searchParams.get('q') ?? '';
+	let scope = $state<SearchScope>(readScope(initialAddress.searchParams.get('kind')));
 	let busy = $state(false);
 	let error = $state('');
 	let noTMDB = $state(false);
@@ -163,11 +164,12 @@
 
 	const ownAddresses = new Set<string>();
 	function writeAddress() {
-		const url = scopeAddress(page.url, scope, searchField.term);
+		const current = page.shallow?.url ?? page.url;
+		const url = scopeAddress(current, scope, searchField.term);
 		if (searchField.term.trim() || !(browse.mood || browse.mgenre || browse.cat)) for (const k of ['mood', 'genre', 'type', 'mgenre', 'cat']) url.searchParams.delete(k);
-		if (url.href === page.url.href) return;
+		if (url.href === current.href) return;
 		ownAddresses.add(url.href);
-		void goto(url, { replace: true, shallow: true });
+		void goto(url, { replace: true, shallow: true, reset: false });
 	}
 
 	let timer: ReturnType<typeof setTimeout> | undefined;
