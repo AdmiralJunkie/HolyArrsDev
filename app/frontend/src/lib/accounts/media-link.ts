@@ -10,3 +10,11 @@ export function accountChoice(a: ServerAccount, userId: number, t: (key: string,
 export type MediaServer = { id: number; name: string; kind: 'jellyfin' | 'emby' };
 export type MediaLink = { provider: string; name: string; kept?: boolean };
 export const mediaKindWord = (k: string) => (k === 'emby' ? 'Emby' : 'Jellyfin');
+
+// A server's choice in the Link menu: "Jellyfin · Den", or just the name when it already says the kind ("Jellyfin", "My Jellyfin").
+export function mediaServerLabel(m: { name: string; kind: string }): string {
+	const kind = mediaKindWord(m.kind);
+	const name = m.name.trim();
+	if (!name) return kind;
+	return name.toLowerCase().includes(kind.toLowerCase()) ? name : `${kind} · ${name}`;
+}

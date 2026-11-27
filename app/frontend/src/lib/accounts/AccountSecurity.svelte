@@ -9,7 +9,7 @@
 	import { needsConfirm } from '#lib/ui/sensitive.ts';
 	import QrCode from './QrCode.svelte';
 	import MediaServerLink from './MediaServerLink.svelte';
-	import { mediaKindWord, type MediaLink, type MediaServer } from './media-link.ts';
+	import { mediaServerLabel, type MediaLink, type MediaServer } from './media-link.ts';
 	import { strong } from './strong-error.ts';
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
@@ -392,7 +392,7 @@
 									<Button type="button" onclick={linkForwardAuth} busy={linkBusy}>{t('accounts.tiles.proxy')}</Button>
 								{/if}
 								{#each mediaServers as m (m.id)}
-									<Button type="button" onclick={() => { mediaOpen = m; linkOpen = false; }} data-testid="media-link-open">{mediaKindWord(m.kind)} · {m.name}</Button>
+									<Button type="button" onclick={() => { mediaOpen = m; linkOpen = false; }} data-testid="media-link-open">{mediaServerLabel(m)}</Button>
 								{/each}
 								<Button variant="plain" type="button" onclick={() => (linkOpen = false)}>{t('accounts.signin.cancel')}</Button>
 							</div>

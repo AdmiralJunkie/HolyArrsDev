@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { accountChoice } from './media-link.ts';
+import { accountChoice, mediaServerLabel } from './media-link.ts';
 
 const mine = readFileSync(new URL('./MediaServerLink.svelte', import.meta.url), 'utf8');
 const t = (key: string, vars?: Record<string, string | number>) => key + (vars ? ` ${vars.name}` : '');
@@ -14,7 +14,7 @@ describe('My account: Jellyfin and Emby links live under Linked sign-ins', () =>
 		expect(security.match(/<MediaServerLink\b/g)).toHaveLength(1);
 	});
 	it('offers each connected server in the Link menu', () => {
-		expect(security).toMatch(/\{#each mediaServers as m \(m\.id\)\}[\s\S]*?mediaOpen = m; linkOpen = false;[\s\S]*?mediaKindWord\(m\.kind\)\} · \{m\.name\}/);
+		expect(security).toMatch(/\{#each mediaServers as m \(m\.id\)\}[\s\S]*?mediaOpen = m; linkOpen = false;[\s\S]*?mediaServerLabel\(m\)\}/);
 	});
 	it('shows the row when only a media server can be linked', () => {
 		expect(security).toMatch(/\|\| mediaServers\.length \|\| mediaLinks\.length\}/);
@@ -41,5 +41,17 @@ describe('My account: keep a Jellyfin sign-in for the player (HolyArrsDev)', () 
 	});
 	it('says when a link keeps a sign-in for playing here', () => {
 		expect(mine).toMatch(/\{#if l\.kept\} · \{t\('accounts\.watch\.keptForPlayback'\)\}\{\/if\}/);
+	});
+});
+
+describe('mediaServerLabel', () => {
+	it('names the kind and the server', () => {
+		expect(mediaServerLabel({ name: 'Den', kind: 'jellyfin' })).toBe('Jellyfin · Den');
+		expect(mediaServerLabel({ name: 'Den', kind: 'emby' })).toBe('Emby · Den');
+	});
+	it('does not say the kind twice', () => {
+		expect(mediaServerLabel({ name: 'Jellyfin', kind: 'jellyfin' })).toBe('Jellyfin');
+		expect(mediaServerLabel({ name: 'my jellyfin', kind: 'jellyfin' })).toBe('my jellyfin');
+		expect(mediaServerLabel({ name: '  ', kind: 'jellyfin' })).toBe('Jellyfin');
 	});
 });
