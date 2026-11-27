@@ -10,6 +10,7 @@
 	import { plainMessage as message } from '#lib/core/settings.ts';
 	import { toasts } from '#lib/core/toasts.svelte.ts';
 	import { mediaKindWord as kindWord, type MediaLink, type MediaServer } from './media-link.ts';
+	import LinkLogo from './LinkLogo.svelte';
 
 	let { links = $bindable(), open = $bindable() }: { links: MediaLink[]; open: MediaServer | null } = $props();
 	let name = $state('');
@@ -70,11 +71,11 @@
 	<ul class="below my-links" data-testid="media-link">
 		{#each links as l (l.provider)}
 			<li>
-				<span class="small">{t('accounts.watch.as', { server: kindWord(l.provider), name: l.name })}{#if l.kept} · {t('accounts.watch.keptForPlayback')}{/if}</span>
+				<span class="small"><LinkLogo kind={l.provider} />{t('accounts.watch.as', { server: kindWord(l.provider), name: l.name })}{#if l.kept}{` · ${t('accounts.watch.keptForPlayback')}`}{/if}</span>
 				{#if unlinking === l.provider}
 					<Confirm action="link" onCancel={() => (unlinking = '')}>
 						<div class="row acts">
-							<Button variant="secondary" type="button" onclick={() => unlink(l.provider)} busy={busy}>{t('accounts.security.unlink')}</Button>
+							<Button variant="destructive" type="button" onclick={() => unlink(l.provider)} busy={busy}>{t('accounts.security.unlink')}</Button>
 							<Button variant="plain" type="button" onclick={() => (unlinking = '')}>{t('accounts.signin.cancel')}</Button>
 						</div>
 					</Confirm>

@@ -40,7 +40,7 @@ describe('My account: keep a Jellyfin sign-in for the player (HolyArrsDev)', () 
 		expect(mine).toMatch(/if \(open\.kind === 'jellyfin'\) body\.keep_for_playback = keep;/);
 	});
 	it('says when a link keeps a sign-in for playing here', () => {
-		expect(mine).toMatch(/\{#if l\.kept\} · \{t\('accounts\.watch\.keptForPlayback'\)\}\{\/if\}/);
+		expect(mine).toMatch(/\{#if l\.kept\}\{` · \$\{t\('accounts\.watch\.keptForPlayback'\)\}`\}\{\/if\}/);
 	});
 });
 
@@ -53,5 +53,17 @@ describe('mediaServerLabel', () => {
 		expect(mediaServerLabel({ name: 'Jellyfin', kind: 'jellyfin' })).toBe('Jellyfin');
 		expect(mediaServerLabel({ name: 'my jellyfin', kind: 'jellyfin' })).toBe('my jellyfin');
 		expect(mediaServerLabel({ name: '  ', kind: 'jellyfin' })).toBe('Jellyfin');
+	});
+});
+
+describe('Linked sign-ins: logos and unlinking', () => {
+	it('puts the brand mark before Plex and media server links', () => {
+		expect(mine).toMatch(/<span class="small"><LinkLogo kind=\{l\.provider\} \/>/);
+		expect(security).toMatch(/<span class="small"><LinkLogo kind="plex" \/>/);
+	});
+	it('confirms every unlink with the red button', () => {
+		expect(mine).toMatch(/variant="destructive" type="button" onclick=\{\(\) => unlink\(l\.provider\)\}/);
+		expect(security).toMatch(/variant="destructive" type="button" onclick=\{unlinkPlexMine\}/);
+		expect(security).toMatch(/variant="destructive" type="button" onclick=\{\(\) => unlink\(l\)\}/);
 	});
 });

@@ -9,6 +9,7 @@
 	import { needsConfirm } from '#lib/ui/sensitive.ts';
 	import QrCode from './QrCode.svelte';
 	import MediaServerLink from './MediaServerLink.svelte';
+	import LinkLogo from './LinkLogo.svelte';
 	import { mediaServerLabel, type MediaLink, type MediaServer } from './media-link.ts';
 	import { strong } from './strong-error.ts';
 	import { onMount } from 'svelte';
@@ -341,13 +342,13 @@
 			{#if plexMine?.linked}
 				<ul class="below my-links" data-testid="my-plex-link">
 					<li>
-						<span class="small">{plexMine.name ? t('accounts.security.plexAs', { name: plexMine.name }) : 'Plex'}</span>
+						<span class="small"><LinkLogo kind="plex" />{plexMine.name ? t('accounts.security.plexAs', { name: plexMine.name }) : 'Plex'}</span>
 						{#if !session.s.hasPassword}
 							<span class="xs muted" data-testid="plex-needs-password">{t('accounts.security.needsPasswordLabel')}</span>
 						{:else if plexUnlinking}
 							<Confirm action="link" onCancel={() => (plexUnlinking = false)}>
 								<div class="row acts">
-									<Button variant="secondary" type="button" onclick={unlinkPlexMine} busy={linkBusy}>{t('accounts.security.unlink')}</Button>
+									<Button variant="destructive" type="button" onclick={unlinkPlexMine} busy={linkBusy}>{t('accounts.security.unlink')}</Button>
 									<Button variant="plain" type="button" onclick={() => (plexUnlinking = false)}>{t('accounts.signin.cancel')}</Button>
 								</div>
 							</Confirm>
@@ -365,7 +366,7 @@
 							{#if unlinkKey === linkKey(l)}
 								<Confirm action="link" onCancel={() => (unlinkKey = '')}>
 									<div class="row acts">
-										<Button variant="secondary" type="button" onclick={() => unlink(l)} busy={linkBusy}>{t('accounts.security.unlink')}</Button>
+										<Button variant="destructive" type="button" onclick={() => unlink(l)} busy={linkBusy}>{t('accounts.security.unlink')}</Button>
 										<Button variant="plain" type="button" onclick={() => (unlinkKey = '')}>{t('accounts.signin.cancel')}</Button>
 									</div>
 								</Confirm>
