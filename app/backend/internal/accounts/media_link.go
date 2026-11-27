@@ -140,6 +140,7 @@ func (a *Auth) myMediaLink(w http.ResponseWriter, r *http.Request) {
 		fail(w, http.StatusNotFound, "no such media server")
 		return
 	}
+	before := a.playerTokenOf(ctx, who.UserID)
 	player := ""
 	if m.Kind == ProviderJellyfin && a.vault != nil {
 		player = a.playerDeviceID(ctx, who.UserID)
@@ -170,6 +171,7 @@ func (a *Auth) myMediaLink(w http.ResponseWriter, r *http.Request) {
 		// Nothing was kept: end the sign-in made for the player.
 		a.endPlayerToken(ctx, m.URL, who.UserID, got.Token)
 	}
+	a.endDroppedPlayerToken(ctx, who.UserID, before)
 	if !a.mediaLinkDone(w, r, who.UserID, m.Kind, got.Name, err) {
 		return
 	}
@@ -290,6 +292,8 @@ func (a *Auth) unlinkMedia(w http.ResponseWriter, r *http.Request, userID int64,
 	}
 	ctx := r.Context()
 	inSetup := false
+	before := a.playerTokenOf(ctx, userID)
+	defer a.endDroppedPlayerToken(ctx, userID, before)
 	err := a.s.WriteCore(ctx, func(tx *sql.Tx) error {
 		hash, err := passwordHashOf(ctx, tx, userID)
 		if err != nil {
@@ -453,7 +457,9 @@ func (a *Auth) userMediaLink(w http.ResponseWriter, r *http.Request) {
 		fail(w, http.StatusNotFound, "no such account on that server")
 		return
 	}
+	before := a.playerTokenOf(ctx, id)
 	err = a.s.WriteCore(ctx, func(tx *sql.Tx) error { return a.linkMediaTx(ctx, tx, id, m, pick.ID, pick.Name) })
+	a.endDroppedPlayerToken(ctx, id, before)
 	if !a.mediaLinkDone(w, r, id, m.Kind, pick.Name, err) {
 		return
 	}

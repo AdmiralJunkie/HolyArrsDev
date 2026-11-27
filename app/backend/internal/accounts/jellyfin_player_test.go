@@ -91,7 +91,7 @@ func playerTokens(t *testing.T, f *fixture) int {
 
 // Linking Jellyfin from My account with keep_for_playback keeps the token,
 // made as the person's own player device; linking again without it, or
-// unlinking, drops it.
+// unlinking, drops it and signs it out of Jellyfin.
 func TestJellyfinPlayerSignIn(t *testing.T) {
 	f := gated(t, Options{})
 	j := &fakePlayerJellyfin{}
@@ -141,6 +141,9 @@ func TestJellyfinPlayerSignIn(t *testing.T) {
 	if j.endedCount("tok") != 1 {
 		t.Fatal("a plain link's sign-in was not ended")
 	}
+	if j.endedCount("playtok") != 1 {
+		t.Fatalf("the dropped player sign-in was ended %d times, want 1", j.endedCount("playtok"))
+	}
 	if _, ok, _ := f.a.JellyfinPlayer(ctx, uid); ok || playerTokens(t, f) != 0 {
 		t.Fatal("the player sign-in is still kept")
 	}
@@ -161,5 +164,33 @@ func TestJellyfinPlayerSignIn(t *testing.T) {
 	}
 	if n := playerTokens(t, f); n != 0 {
 		t.Fatalf("%d player tokens left after unlinking", n)
+	}
+	if j.endedCount("playtok") != 2 {
+		t.Fatalf("unlinking did not end the player sign-in on Jellyfin (%d ends)", j.endedCount("playtok"))
+	}
+}
+
+// Deleting a person signs their kept player sign-in out of Jellyfin.
+func TestDeletingPersonEndsPlayerSignIn(t *testing.T) {
+	f := gated(t, Options{})
+	j := &fakePlayerJellyfin{}
+	srv := j.serve(t)
+	f.a.SetMediaLinks(MediaLinks{
+		Servers: func(context.Context) ([]LinkServer, error) {
+			return []LinkServer{{ID: 7, Name: "Den", Kind: "jellyfin", URL: srv.URL}}, nil
+		},
+		Accounts: func(context.Context, int64) ([]ServerAccount, error) { return nil, nil },
+	})
+	own := ownerOf(t, f)
+	ana := join(t, f, invite(t, f, own, `{"role":"member"}`), "ana")
+	if resp, out := ana.do(t, f, "POST", "/api/v1/auth/media-link/7", `{"name":"mum","password":"right","keep_for_playback":true}`); resp.StatusCode != 200 {
+		t.Fatalf("link and keep: %d %s", resp.StatusCode, out)
+	}
+	id := strconv.FormatInt(userID(t, f, "ana"), 10)
+	if resp, out := own.do(t, f, "DELETE", "/api/v1/users/"+id, ""); resp.StatusCode != 204 {
+		t.Fatalf("delete: %d %s", resp.StatusCode, out)
+	}
+	if n := playerTokens(t, f); n != 0 || j.endedCount("playtok") != 1 {
+		t.Fatalf("after deleting: %d tokens kept, %d ends", n, j.endedCount("playtok"))
 	}
 }

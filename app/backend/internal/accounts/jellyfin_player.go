@@ -95,6 +95,44 @@ func (a *Auth) keepPlayerTokenTx(ctx context.Context, tx *sql.Tx, userID int64, 
 	return err
 }
 
+// playerTokenOf is the player sign-in kept on userID's Jellyfin link
+// whatever their state; "" when none is kept or it cannot be read.
+func (a *Auth) playerTokenOf(ctx context.Context, userID int64) string {
+	if a.vault == nil {
+		return ""
+	}
+	var ref sql.NullInt64
+	err := a.s.Read().QueryRowContext(ctx, "SELECT token_secret_id FROM user_links WHERE provider = 'jellyfin' AND user_id = ?", userID).Scan(&ref)
+	if err != nil || !ref.Valid {
+		return ""
+	}
+	tok, err := a.vault.Get(ctx, ref.Int64)
+	if err != nil {
+		return ""
+	}
+	return tok
+}
+
+// endDroppedPlayerToken signs before out of Jellyfin when a change took it
+// off userID's link (unlinked, linked again without keeping, another
+// account, the person deleted), so its device leaves Jellyfin's Devices
+// list. Read before with playerTokenOf ahead of the change; a change that
+// failed left it kept and nothing happens.
+func (a *Auth) endDroppedPlayerToken(ctx context.Context, userID int64, before string) {
+	if before == "" || a.playerTokenOf(ctx, userID) == before {
+		return
+	}
+	ms, err := a.linkServers(ctx)
+	if err != nil {
+		log.Printf("auth: ending the player sign-in of user %d: %v", userID, err)
+	}
+	for _, m := range ms {
+		if m.Kind == ProviderJellyfin {
+			a.endPlayerToken(ctx, m.URL, userID, before)
+		}
+	}
+}
+
 // endPlayerToken ends a player sign-in on the server; failures are only
 // logged.
 func (a *Auth) endPlayerToken(ctx context.Context, serverURL string, userID int64, tok string) {

@@ -48,6 +48,8 @@ func (a *Auth) deletePerson(w http.ResponseWriter, r *http.Request) {
 	name := a.userName(r.Context(), id)
 	actor, _ := json.Marshal(webserver.Actor(r.Context()))
 	now := database.FormatTime(a.now())
+	before := a.playerTokenOf(r.Context(), id)
+	defer a.endDroppedPlayerToken(r.Context(), id, before)
 	err = a.s.WriteCore(r.Context(), func(tx *sql.Tx) error {
 		if err := clearTwoFactor(r.Context(), tx, a.vault, id); err != nil {
 			return err
