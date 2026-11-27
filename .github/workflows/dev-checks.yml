@@ -39,6 +39,14 @@ jobs:
         with:
           go-version-file: go.mod
 
+      # The server embeds the built web app; some Go tests (for example
+      # /login in accounts) need it, as the Makefile builds it first too.
+      - name: Build the web app
+        working-directory: app/frontend
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm run build
+
       - name: Build
         run: go build -trimpath -o /dev/null ./app/backend/cmd/holyarrs
 
