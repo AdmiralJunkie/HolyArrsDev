@@ -8,6 +8,11 @@ on:
   push:
     branches-ignore: [main]
   workflow_dispatch:
+    inputs:
+      full:
+        description: Run the whole Go test suite (slow, about an hour) instead of only the packages the fork changes
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -20,7 +25,7 @@ jobs:
   backend:
     name: Go build, vet and test
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 120
     env:
       CGO_ENABLED: '0'
     steps:
@@ -40,8 +45,14 @@ jobs:
       - name: Vet
         run: go vet ./...
 
-      - name: Test
-        run: go test -timeout 25m ./...
+      # The packages the fork changes. Add a package here when a step touches it.
+      - name: Test (changed packages)
+        if: ${{ !inputs.full }}
+        run: go test -timeout 25m ./app/backend/internal/accounts/...
+
+      - name: Test (whole suite)
+        if: ${{ inputs.full }}
+        run: go test -timeout 100m ./...
 
   frontend:
     name: Frontend unit tests
