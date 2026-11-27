@@ -9,6 +9,7 @@
 	import { needsConfirm } from '#lib/ui/sensitive.ts';
 	import QrCode from './QrCode.svelte';
 	import MediaServerLink from './MediaServerLink.svelte';
+	import { mediaKindWord, type MediaLink, type MediaServer } from './media-link.ts';
 	import { strong } from './strong-error.ts';
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
@@ -30,10 +31,20 @@
 	let linkError = $state('');
 	let linkBusy = $state(false);
 	const hasLinkWay = $derived(session.s.ways.includes('oidc') || session.s.ways.includes('forward_auth'));
+	// The owner's Jellyfin and Emby servers I may link, and my links to them (MediaServerLink).
+	let mediaServers = $state<MediaServer[]>([]);
+	let mediaLinks = $state<MediaLink[]>([]);
+	let mediaOpen = $state<MediaServer | null>(null);
+	async function loadMedia() {
+		const r = await api.get<{ servers: MediaServer[]; links: MediaLink[] }>('/auth/media-link').catch(() => null);
+		mediaServers = r?.servers ?? [];
+		mediaLinks = r?.links ?? [];
+	}
 
 	onMount(() => {
 		void loadLinks();
 		void loadPlexMine();
+		void loadMedia();
 		void session.loadWays().then(() => {
 			if (page.url.searchParams.get('sso') === 'finish') void finishOIDCLink();
 		});
@@ -323,10 +334,10 @@
 			</div>
 		{/if}
 	</div>
-	{#if hasLinkWay || myLinks.length || plexMine?.linked || (plexMine && session.s.hasPassword)}
+	{#if hasLinkWay || myLinks.length || plexMine?.linked || (plexMine && session.s.hasPassword) || mediaServers.length || mediaLinks.length}
 		<div class="srow" id="linked-me">
 			<div class="txt"><span class="label">{t('accounts.security.linked')}</span><span class="hint" title={t('accounts.security.matched')}>{t('accounts.security.matched')}</span></div>
-			<div class="ctl">{#if !linkOpen && (hasLinkWay || session.s.hasPassword)}<Button variant="secondary" type="button" onclick={() => (linkOpen = true)} data-testid="link-sign-in">{t('accounts.security.link')}</Button>{/if}</div>
+			<div class="ctl">{#if !linkOpen && !mediaOpen && (hasLinkWay || session.s.hasPassword || mediaServers.length)}<Button variant="secondary" type="button" onclick={() => (linkOpen = true)} data-testid="link-sign-in">{t('accounts.security.link')}</Button>{/if}</div>
 			{#if plexMine?.linked}
 				<ul class="below my-links" data-testid="my-plex-link">
 					<li>
@@ -365,6 +376,7 @@
 					{/each}
 				</ul>
 			{/if}
+			<MediaServerLink bind:links={mediaLinks} bind:open={mediaOpen} />
 			{#if linkOpen || linkError}
 				<div class="below">
 					{#if linkOpen}
@@ -379,6 +391,9 @@
 								{#if session.s.ways.includes('forward_auth')}
 									<Button type="button" onclick={linkForwardAuth} busy={linkBusy}>{t('accounts.tiles.proxy')}</Button>
 								{/if}
+								{#each mediaServers as m (m.id)}
+									<Button type="button" onclick={() => { mediaOpen = m; linkOpen = false; }} data-testid="media-link-open">{mediaKindWord(m.kind)} · {m.name}</Button>
+								{/each}
 								<Button variant="plain" type="button" onclick={() => (linkOpen = false)}>{t('accounts.signin.cancel')}</Button>
 							</div>
 						</Confirm>
@@ -388,7 +403,6 @@
 			{/if}
 		</div>
 	{/if}
-	<MediaServerLink />
 	{#if session.s.role === 'owner'}
 		<div class="srow">
 			<div class="txt"><span class="label">{t('accounts.security.locked')}</span><span class="hint">{t('accounts.signin.runThis')} <code class="cmd">{RESET_CMD}</code></span></div>

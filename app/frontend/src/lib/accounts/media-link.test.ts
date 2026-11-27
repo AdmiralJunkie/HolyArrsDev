@@ -5,12 +5,22 @@ import { accountChoice } from './media-link.ts';
 const mine = readFileSync(new URL('./MediaServerLink.svelte', import.meta.url), 'utf8');
 const t = (key: string, vars?: Record<string, string | number>) => key + (vars ? ` ${vars.name}` : '');
 
-describe('My account: Link my Jellyfin or Emby account', () => {
-	it('puts the server buttons under the words on a phone', () => {
-		expect(mine).toMatch(/@media \(max-width: 600px\)[^}]*\.srow[^}]*grid-template-columns: minmax\(0, 1fr\)/);
+const security = readFileSync(new URL('./AccountSecurity.svelte', import.meta.url), 'utf8');
+
+describe('My account: Jellyfin and Emby links live under Linked sign-ins', () => {
+	it('lists my media server links and the sign-in form inside the Linked sign-ins row', () => {
+		const row = security.slice(security.indexOf('id="linked-me"'));
+		expect(row.indexOf('<MediaServerLink bind:links={mediaLinks} bind:open={mediaOpen} />')).toBeGreaterThan(0);
+		expect(security.match(/<MediaServerLink\b/g)).toHaveLength(1);
 	});
-	it('says Change on a server the person already linked', () => {
-		expect(mine).toMatch(/linkOf\(s\.kind\) \? t\('accounts\.account\.change'\) : t\('accounts\.security\.link'\)/);
+	it('offers each connected server in the Link menu', () => {
+		expect(security).toMatch(/\{#each mediaServers as m \(m\.id\)\}[\s\S]*?mediaOpen = m; linkOpen = false;[\s\S]*?mediaKindWord\(m\.kind\)\} · \{m\.name\}/);
+	});
+	it('shows the row when only a media server can be linked', () => {
+		expect(security).toMatch(/\|\| mediaServers\.length \|\| mediaLinks\.length\}/);
+	});
+	it('has no separate Watched marks section any more', () => {
+		expect(mine).not.toMatch(/accounts\.watch\.title/);
 	});
 });
 
