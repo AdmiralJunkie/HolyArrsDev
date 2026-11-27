@@ -73,3 +73,4 @@ export type { RecentWay } from './recent-people.ts';
 export type { ThemeChoice } from './theme.svelte.ts';
 export type { Way } from './signin-art.ts';
 export { createSigninWays } from './signin-ways.svelte.ts';
+export { playerStatus, loadPlayerStatus, playerPins } from './player-status.svelte.ts';

@@ -10,6 +10,7 @@
 	import QrCode from './QrCode.svelte';
 	import MediaServerLink from './MediaServerLink.svelte';
 	import LinkLogo from './LinkLogo.svelte';
+	import { playerStatus } from './player-status.svelte.ts';
 	import { mediaServerLabel, type MediaLink, type MediaServer } from './media-link.ts';
 	import { strong } from './strong-error.ts';
 	import { onMount } from 'svelte';
@@ -36,10 +37,13 @@
 	let mediaServers = $state<MediaServer[]>([]);
 	let mediaLinks = $state<MediaLink[]>([]);
 	let mediaOpen = $state<MediaServer | null>(null);
+	// No Jellyfin server connected: the Link menu shows Jellyfin greyed out (the player needs one).
+	const jellyfinUp = $derived(mediaServers.some((m) => m.kind === 'jellyfin'));
 	async function loadMedia() {
-		const r = await api.get<{ servers: MediaServer[]; links: MediaLink[] }>('/auth/media-link').catch(() => null);
+		const r = await api.get<{ servers: MediaServer[]; links: MediaLink[]; player_lost?: boolean }>('/auth/media-link').catch(() => null);
 		mediaServers = r?.servers ?? [];
 		mediaLinks = r?.links ?? [];
+		if (r) playerStatus.lost = !!r.player_lost;
 	}
 
 	onMount(() => {
@@ -377,7 +381,7 @@
 					{/each}
 				</ul>
 			{/if}
-			<MediaServerLink bind:links={mediaLinks} bind:open={mediaOpen} />
+			<MediaServerLink servers={mediaServers} bind:links={mediaLinks} bind:open={mediaOpen} />
 			{#if linkOpen || linkError}
 				<div class="below">
 					{#if linkOpen}
@@ -395,6 +399,9 @@
 								{#each mediaServers as m (m.id)}
 									<Button type="button" onclick={() => { mediaOpen = m; linkOpen = false; }} data-testid="media-link-open">{mediaServerLabel(m)}</Button>
 								{/each}
+								{#if !jellyfinUp}
+									<span class="no-server" title={t('accounts.watch.noServer')}><Button type="button" disabled aria-describedby="no-jellyfin" data-testid="media-link-none">Jellyfin</Button><span class="sr-only" id="no-jellyfin">{t('accounts.watch.noServer')}</span></span>
+								{/if}
 								<Button variant="plain" type="button" onclick={() => (linkOpen = false)}>{t('accounts.signin.cancel')}</Button>
 							</div>
 						</Confirm>
@@ -433,4 +440,7 @@
 	@media (max-width: 600px) {
 		.six { max-width: none; flex: 1; }
 	}
+	/* The greyed Jellyfin choice: the wrapper carries the hover note, as a disabled button shows none. */
+	.no-server { display: inline-flex; cursor: not-allowed; }
+	.no-server :global(.ui-btn) { pointer-events: none; }
 </style>

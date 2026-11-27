@@ -38,6 +38,8 @@
 	"frame.feeds.update": "Pieejams atjauninājums",
 	"frame.feeds.updateReady": "Versija {version} ir gatava",
 	"frame.feeds.updateLabel": "Atjaunināt",
+	"frame.feeds.playerLost": "The Jellyfin server connection was removed",
+	"frame.feeds.playerLostBody": "Playback is unavailable. Once the owner connects it again, link Jellyfin again in My account.",
 	"frame.shell.closeSidebar": "Aizvērt sānjoslu",
 	"frame.tabs.main": "Galvenā",
 	"frame.tabs.attention": ", ir vienumi, kuriem jāpievērš uzmanība",

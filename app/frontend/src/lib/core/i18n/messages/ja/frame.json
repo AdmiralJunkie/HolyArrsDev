@@ -38,6 +38,8 @@
 	"frame.feeds.update": "アップデートがあります",
 	"frame.feeds.updateReady": "バージョン {version} を利用できます",
 	"frame.feeds.updateLabel": "アップデート",
+	"frame.feeds.playerLost": "The Jellyfin server connection was removed",
+	"frame.feeds.playerLostBody": "Playback is unavailable. Once the owner connects it again, link Jellyfin again in My account.",
 	"frame.shell.closeSidebar": "サイドバーを閉じる",
 	"frame.tabs.main": "メイン",
 	"frame.tabs.attention": "、要確認の項目あり",

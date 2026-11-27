@@ -97,6 +97,7 @@ func buildHandlers(s services) *handlers {
 	if s.Auth != nil {
 		a.media.PlexServerToken = s.Auth.PlexServerToken
 		a.media.MediaSignInKey = s.Auth.MediaSignInKey
+		a.media.Removing = s.Auth.PlayerServerRemoving
 		a.media.NameCase = accounts.RealCase
 	}
 	a.mf = &mediafiles.Handlers{Deps: mediafiles.Deps{Store: s.Store, Queue: s.Queue, Metadata: s.Metadata, KidMax: a.kidMax, RouteUsable: routeUsable}}

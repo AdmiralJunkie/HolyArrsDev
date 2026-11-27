@@ -38,6 +38,8 @@
 	"frame.feeds.update": "Διαθέσιμη ενημέρωση",
 	"frame.feeds.updateReady": "Η έκδοση {version} είναι έτοιμη",
 	"frame.feeds.updateLabel": "Ενημέρωση",
+	"frame.feeds.playerLost": "The Jellyfin server connection was removed",
+	"frame.feeds.playerLostBody": "Playback is unavailable. Once the owner connects it again, link Jellyfin again in My account.",
 	"frame.shell.closeSidebar": "Κλείσιμο πλαϊνής στήλης",
 	"frame.tabs.main": "Κύριο",
 	"frame.tabs.attention": ", υπάρχουν στοιχεία που θέλουν προσοχή",

@@ -406,6 +406,8 @@
 	"accounts.watch.keepForPlayback": "Keep me signed in to play here",
 	"accounts.watch.keepForPlaybackHint": "HolyArrs keeps a sign-in from {server}, never your password, so its player can play as you with your own resume points. Unlink to end it.",
 	"accounts.watch.keptForPlayback": "Signed in for playing here",
+	"accounts.watch.noServer": "The owner hasn't connected a Jellyfin server",
+	"accounts.watch.serverGone": "Server not connected",
 	"accounts.login.importPaused": "Innloggingen din utløp, så importen er satt på pause. Logg inn, åpne Importer et bibliotek og trykk Skann for å fortsette.",
 	"accounts.forgot.link": "Glemt passordet?",
 	"accounts.forgot.title": "Tilbakestill eieren",

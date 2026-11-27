@@ -38,6 +38,8 @@
 	"frame.feeds.update": "May available na update",
 	"frame.feeds.updateReady": "Handa na ang bersyon {version}",
 	"frame.feeds.updateLabel": "I-update",
+	"frame.feeds.playerLost": "The Jellyfin server connection was removed",
+	"frame.feeds.playerLostBody": "Playback is unavailable. Once the owner connects it again, link Jellyfin again in My account.",
 	"frame.shell.closeSidebar": "Isara ang sidebar",
 	"frame.tabs.main": "Pangunahin",
 	"frame.tabs.attention": ", may mga item na kailangan ng pansin",

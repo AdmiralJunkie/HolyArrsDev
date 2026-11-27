@@ -38,6 +38,8 @@
 	"frame.feeds.update": "יש עדכון",
 	"frame.feeds.updateReady": "גרסה {version} מוכנה",
 	"frame.feeds.updateLabel": "עדכון",
+	"frame.feeds.playerLost": "The Jellyfin server connection was removed",
+	"frame.feeds.playerLostBody": "Playback is unavailable. Once the owner connects it again, link Jellyfin again in My account.",
 	"frame.shell.closeSidebar": "סגירת סרגל הצד",
 	"frame.tabs.main": "ראשי",
 	"frame.tabs.attention": ", יש פריטים שדורשים תשומת לב",

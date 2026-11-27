@@ -194,3 +194,53 @@ func TestDeletingPersonEndsPlayerSignIn(t *testing.T) {
 		t.Fatalf("after deleting: %d tokens kept, %d ends", n, j.endedCount("playtok"))
 	}
 }
+
+// Removing the last Jellyfin server signs every kept player sign-in out of it,
+// deletes them, keeps the links, and tells each person until they link again.
+func TestRemovingJellyfinEndsPlayerSignIns(t *testing.T) {
+	f := gated(t, Options{})
+	j := &fakePlayerJellyfin{}
+	srv := j.serve(t)
+	f.a.SetMediaLinks(MediaLinks{
+		Servers: func(context.Context) ([]LinkServer, error) {
+			return []LinkServer{{ID: 7, Name: "Den", Kind: "jellyfin", URL: srv.URL}}, nil
+		},
+		Accounts: func(context.Context, int64) ([]ServerAccount, error) { return nil, nil },
+	})
+	own := ownerOf(t, f)
+	ana := join(t, f, invite(t, f, own, `{"role":"member"}`), "ana")
+	uid := userID(t, f, "ana")
+	ctx := context.Background()
+	if _, out := ana.do(t, f, "GET", "/api/v1/auth/media-link", ""); !strings.Contains(out, `"player_lost":false`) {
+		t.Fatalf("before: %s", out)
+	}
+	if resp, out := ana.do(t, f, "POST", "/api/v1/auth/media-link/7", `{"name":"mum","password":"right","keep_for_playback":true}`); resp.StatusCode != 200 {
+		t.Fatalf("link and keep: %d %s", resp.StatusCode, out)
+	}
+
+	// An Emby server going changes nothing.
+	f.a.PlayerServerRemoving(ctx, "emby", "http://emby.example")
+	if playerTokens(t, f) != 1 {
+		t.Fatal("removing an Emby server dropped the Jellyfin player sign-in")
+	}
+
+	f.a.PlayerServerRemoving(ctx, "jellyfin", srv.URL+"/")
+	if n := playerTokens(t, f); n != 0 || j.endedCount("playtok") != 1 {
+		t.Fatalf("after removing: %d tokens kept, %d ends", n, j.endedCount("playtok"))
+	}
+	links, _ := LinksOfPerson(ctx, f.s.Read(), uid)
+	if len(links) != 1 || links[0].ExtID != "abc123" {
+		t.Fatalf("the link should stay: %v", links)
+	}
+	if _, out := ana.do(t, f, "GET", "/api/v1/auth/media-link", ""); !strings.Contains(out, `"player_lost":true`) || strings.Contains(out, `"kept":true`) {
+		t.Fatalf("told: %s", out)
+	}
+
+	// Linking again (the server is back) ends the alert.
+	if resp, out := ana.do(t, f, "POST", "/api/v1/auth/media-link/7", `{"name":"mum","password":"right","keep_for_playback":true}`); resp.StatusCode != 200 {
+		t.Fatalf("link again: %d %s", resp.StatusCode, out)
+	}
+	if _, out := ana.do(t, f, "GET", "/api/v1/auth/media-link", ""); !strings.Contains(out, `"player_lost":false`) || !strings.Contains(out, `"kept":true`) {
+		t.Fatalf("after linking again: %s", out)
+	}
+}

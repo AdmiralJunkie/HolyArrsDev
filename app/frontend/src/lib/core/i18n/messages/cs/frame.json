@@ -38,6 +38,8 @@
 	"frame.feeds.update": "Je k dispozici aktualizace",
 	"frame.feeds.updateReady": "Verze {version} je připravena",
 	"frame.feeds.updateLabel": "Aktualizovat",
+	"frame.feeds.playerLost": "The Jellyfin server connection was removed",
+	"frame.feeds.playerLostBody": "Playback is unavailable. Once the owner connects it again, link Jellyfin again in My account.",
 	"frame.shell.closeSidebar": "Zavřít postranní panel",
 	"frame.tabs.main": "Hlavní",
 	"frame.tabs.attention": ", položky vyžadují pozornost",

@@ -38,6 +38,8 @@
 	"frame.feeds.update": "به‌روزرسانی موجود است",
 	"frame.feeds.updateReady": "نسخه {version} آماده است",
 	"frame.feeds.updateLabel": "به‌روزرسانی",
+	"frame.feeds.playerLost": "The Jellyfin server connection was removed",
+	"frame.feeds.playerLostBody": "Playback is unavailable. Once the owner connects it again, link Jellyfin again in My account.",
 	"frame.shell.closeSidebar": "بستن نوار کناری",
 	"frame.tabs.main": "اصلی",
 	"frame.tabs.attention": "، مورد نیازمند توجه",

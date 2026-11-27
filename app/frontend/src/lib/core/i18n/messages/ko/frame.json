@@ -38,6 +38,8 @@
 	"frame.feeds.update": "업데이트 가능",
 	"frame.feeds.updateReady": "버전 {version} 준비됨",
 	"frame.feeds.updateLabel": "업데이트",
+	"frame.feeds.playerLost": "The Jellyfin server connection was removed",
+	"frame.feeds.playerLostBody": "Playback is unavailable. Once the owner connects it again, link Jellyfin again in My account.",
 	"frame.shell.closeSidebar": "사이드바 닫기",
 	"frame.tabs.main": "메인",
 	"frame.tabs.attention": ", 확인이 필요한 항목 있음",

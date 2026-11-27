@@ -406,6 +406,8 @@
 	"accounts.watch.keepForPlayback": "Keep me signed in to play here",
 	"accounts.watch.keepForPlaybackHint": "HolyArrs keeps a sign-in from {server}, never your password, so its player can play as you with your own resume points. Unlink to end it.",
 	"accounts.watch.keptForPlayback": "Signed in for playing here",
+	"accounts.watch.noServer": "The owner hasn't connected a Jellyfin server",
+	"accounts.watch.serverGone": "Server not connected",
 	"accounts.login.importPaused": "আপনার সাইন-ইন শেষ হয়ে গেছে, তাই ইমপোর্ট থেমে আছে। সাইন ইন করুন, একটি লাইব্রেরি ইমপোর্ট করুন খুলুন আর চালিয়ে যেতে স্ক্যান চাপুন।",
 	"accounts.forgot.link": "পাসওয়ার্ড ভুলে গেছেন?",
 	"accounts.forgot.title": "মালিক রিসেট করুন",

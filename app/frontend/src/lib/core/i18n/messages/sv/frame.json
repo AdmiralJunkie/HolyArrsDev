@@ -38,6 +38,8 @@
   "frame.feeds.update": "Uppdatering tillgänglig",
   "frame.feeds.updateReady": "Version {version} är redo",
   "frame.feeds.updateLabel": "Uppdatera",
+  "frame.feeds.playerLost": "The Jellyfin server connection was removed",
+  "frame.feeds.playerLostBody": "Playback is unavailable. Once the owner connects it again, link Jellyfin again in My account.",
   "frame.shell.closeSidebar": "Stäng sidofältet",
   "frame.tabs.main": "Huvud",
   "frame.tabs.attention": ", objekt behöver åtgärdas",

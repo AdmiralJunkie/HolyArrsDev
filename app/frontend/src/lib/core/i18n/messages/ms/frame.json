@@ -38,6 +38,8 @@
 	"frame.feeds.update": "Kemas kini tersedia",
 	"frame.feeds.updateReady": "Versi {version} sudah sedia",
 	"frame.feeds.updateLabel": "Kemas kini",
+	"frame.feeds.playerLost": "The Jellyfin server connection was removed",
+	"frame.feeds.playerLostBody": "Playback is unavailable. Once the owner connects it again, link Jellyfin again in My account.",
 	"frame.shell.closeSidebar": "Tutup bar sisi",
 	"frame.tabs.main": "Utama",
 	"frame.tabs.attention": ", item perlu perhatian",

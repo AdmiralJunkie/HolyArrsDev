@@ -38,6 +38,8 @@
 	"frame.feeds.update": "Dostępna aktualizacja",
 	"frame.feeds.updateReady": "Wersja {version} jest gotowa",
 	"frame.feeds.updateLabel": "Aktualizacja",
+	"frame.feeds.playerLost": "The Jellyfin server connection was removed",
+	"frame.feeds.playerLostBody": "Playback is unavailable. Once the owner connects it again, link Jellyfin again in My account.",
 	"frame.shell.closeSidebar": "Zamknij pasek boczny",
 	"frame.tabs.main": "Główne",
 	"frame.tabs.attention": ", elementy wymagają uwagi",

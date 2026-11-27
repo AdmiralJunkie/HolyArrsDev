@@ -38,6 +38,8 @@
 	"frame.feeds.update": "Có bản cập nhật",
 	"frame.feeds.updateReady": "Phiên bản {version} đã sẵn sàng",
 	"frame.feeds.updateLabel": "Cập nhật",
+	"frame.feeds.playerLost": "The Jellyfin server connection was removed",
+	"frame.feeds.playerLostBody": "Playback is unavailable. Once the owner connects it again, link Jellyfin again in My account.",
 	"frame.shell.closeSidebar": "Đóng thanh bên",
 	"frame.tabs.main": "Chính",
 	"frame.tabs.attention": "; có mục cần chú ý",

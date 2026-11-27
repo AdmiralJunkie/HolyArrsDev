@@ -38,6 +38,8 @@
 	"frame.feeds.update": "Uppfærsla í boði",
 	"frame.feeds.updateReady": "Útgáfa {version} er tilbúin",
 	"frame.feeds.updateLabel": "Uppfæra",
+	"frame.feeds.playerLost": "The Jellyfin server connection was removed",
+	"frame.feeds.playerLostBody": "Playback is unavailable. Once the owner connects it again, link Jellyfin again in My account.",
 	"frame.shell.closeSidebar": "Loka hliðarstiku",
 	"frame.tabs.main": "Aðal",
 	"frame.tabs.attention": "; atriði þarfnast athygli",

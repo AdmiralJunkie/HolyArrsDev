@@ -17,7 +17,7 @@
 	import Theater from './(frame)/Theater.svelte';
 	import { theater } from '#lib/core/trailer/theater.svelte.ts';
 	import { session } from '#lib/core/session.svelte.ts';
-	import { keepPersonPic, theme, setTheme, type ThemeChoice, backdrop, loadProfile, forgetProfile, profile, LanguagePackNotice } from '#lib/accounts/index.ts';
+	import { keepPersonPic, theme, setTheme, type ThemeChoice, backdrop, loadProfile, forgetProfile, profile, LanguagePackNotice, playerStatus, loadPlayerStatus, playerPins } from '#lib/accounts/index.ts';
 	import { fetchMissing } from '#lib/core/i18n/language-packs.svelte.ts';
 	import { live } from '#lib/core/live.svelte.ts';
 	import { dlPush, decisions, refreshDecisions, activeDownloads, refreshActiveDownloads, resetActiveDownloads, dlTop } from '#lib/downloads/index.ts';
@@ -325,16 +325,27 @@
 	// The display name from My account when set; else an id-like account name (preview-..., e2e-...) reads as "You".
 	const shownName = $derived(profile.displayName.trim() || personName(session.s.name, t('frame.layout.you')));
 	// The bell counts new alerts plus Settings warnings still open (those stay until fixed).
-	const openFixes = $derived(alertFixes(settingsAttention ? (settingsNow.answer?.items ?? []) : [], settingsPages, feedPins.update ? [feedPins.update] : [], [...decisionPins(), ...(feedPins.clear ? [feedPins.clear] : [])]).length);
+	const openFixes = $derived(alertFixes(settingsAttention ? (settingsNow.answer?.items ?? []) : [], settingsPages, [...playerPins(), ...(feedPins.update ? [feedPins.update] : [])], [...decisionPins(), ...(feedPins.clear ? [feedPins.clear] : [])]).length);
 	// Request updates, failed downloads and a new version reach the bell from any page.
 	$effect(() => {
 		if (session.s.state !== 'signed_in') return;
 		return startBellFeeds(allowed('manage'));
 	});
+	// HolyArrsDev: is my Jellyfin player sign-in gone with a removed server? Read at sign-in and every few minutes.
+	$effect(() => {
+		if (session.s.state !== 'signed_in') return;
+		void loadPlayerStatus();
+		const timer = setInterval(() => void loadPlayerStatus(), 5 * 60_000);
+		return () => {
+			clearInterval(timer);
+			playerStatus.lost = false;
+		};
+	});
 	const unseenAlerts = $derived(toasts.unseen() + openFixes);
 	const hasFailAlert = $derived(openFixes > 0 || toasts.past.some((p) => p.fresh && p.tone === 'fail'));
 	const accountItems = $derived<MenuItem[]>([
-		{ label: t('frame.layout.account'), icon: 'user', href: to('/account') },
+		// HolyArrsDev: a red dot while my Jellyfin player sign-in is gone with a removed server.
+		{ label: t('frame.layout.account'), icon: 'user', href: to('/account'), dot: playerStatus.lost, dotLabel: playerStatus.lost ? t('frame.feeds.playerLost') : undefined },
 		// Support sits on the Status page, so only accounts that can open Status see it.
 		...(pageAllowed('/health') ? [{ label: t('frame.layout.support'), icon: 'heart' as const, href: to('/health?tab=support') }] : []),
 		{ kind: 'separator' },

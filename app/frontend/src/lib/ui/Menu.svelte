@@ -1,7 +1,7 @@
 <script lang="ts" module>
 	import type { IconName } from './Icon.svelte';
 	export type MenuItem =
-		| { kind?: 'item'; label: string; icon?: IconName; href?: string; onselect?: () => void; destructive?: boolean; disabled?: boolean; checked?: boolean; hint?: string; sub?: string }
+		| { kind?: 'item'; label: string; icon?: IconName; href?: string; onselect?: () => void; destructive?: boolean; disabled?: boolean; checked?: boolean; hint?: string; sub?: string; dot?: boolean; dotLabel?: string }
 		| { kind: 'separator' }
 		| { kind: 'heading'; label: string };
 </script>
@@ -101,7 +101,7 @@
 					<div class="heading" role="presentation">{item.label}</div>
 				{:else if item.href && !item.disabled}
 					<a class="item" class:danger={item.destructive} role="menuitem" tabindex="-1" href={item.href} onclick={() => pick(item, close)}>
-						<span class="ic">{#if item.icon}<Icon name={item.icon} size={17} />{/if}</span><span class="grow">{item.label}{#if item.sub}<small class="sub">{item.sub}</small>{/if}</span>{#if item.hint}<kbd>{item.hint}</kbd>{/if}
+						<span class="ic">{#if item.icon}<Icon name={item.icon} size={17} />{/if}</span><span class="grow">{item.label}{#if item.sub}<small class="sub">{item.sub}</small>{/if}</span>{#if item.dot}<span class="flag" title={item.dotLabel} aria-hidden="true" data-testid="menu-flag"></span>{#if item.dotLabel}<span class="sr-only">{item.dotLabel}</span>{/if}{/if}{#if item.hint}<kbd>{item.hint}</kbd>{/if}
 					</a>
 				{:else}
 					<button
@@ -114,7 +114,7 @@
 						tabindex="-1"
 						onclick={() => pick(item, close)}
 					>
-						<span class="ic">{#if item.checked}<Icon name="check" size={17} />{:else if item.icon}<Icon name={item.icon} size={17} />{/if}</span><span class="grow">{item.label}{#if item.sub}<small class="sub">{item.sub}</small>{/if}</span>{#if item.hint}<kbd>{item.hint}</kbd>{/if}
+						<span class="ic">{#if item.checked}<Icon name="check" size={17} />{:else if item.icon}<Icon name={item.icon} size={17} />{/if}</span><span class="grow">{item.label}{#if item.sub}<small class="sub">{item.sub}</small>{/if}</span>{#if item.dot}<span class="flag" title={item.dotLabel} aria-hidden="true" data-testid="menu-flag"></span>{#if item.dotLabel}<span class="sr-only">{item.dotLabel}</span>{/if}{/if}{#if item.hint}<kbd>{item.hint}</kbd>{/if}
 					</button>
 				{/if}
 			{/each}
@@ -141,4 +141,6 @@
 	@media (pointer: coarse) { .item { min-height: 44px; } }
 	/* A second line under an item's name, such as an order's season and episode counts. */
 	.sub { display: block; margin-top: 2px; color: var(--text-muted); font: 400 12px/1.3 var(--font-ui); }
+	/* A red dot after the label when something there needs you (as on sidebar rows). */
+	.flag { flex: none; width: 7px; height: 7px; border-radius: 50%; background: var(--fail); }
 </style>

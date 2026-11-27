@@ -38,6 +38,8 @@
 	"frame.feeds.update": "Güncelleme var",
 	"frame.feeds.updateReady": "{version} sürümü hazır",
 	"frame.feeds.updateLabel": "Güncelleme",
+	"frame.feeds.playerLost": "The Jellyfin server connection was removed",
+	"frame.feeds.playerLostBody": "Playback is unavailable. Once the owner connects it again, link Jellyfin again in My account.",
 	"frame.shell.closeSidebar": "Kenar çubuğunu kapat",
 	"frame.tabs.main": "Ana",
 	"frame.tabs.attention": ", öğeler ilgi bekliyor",

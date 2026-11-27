@@ -38,6 +38,8 @@
 	"frame.feeds.update": "Налична е актуализация",
 	"frame.feeds.updateReady": "Версия {version} е готова",
 	"frame.feeds.updateLabel": "Актуализиране",
+	"frame.feeds.playerLost": "The Jellyfin server connection was removed",
+	"frame.feeds.playerLostBody": "Playback is unavailable. Once the owner connects it again, link Jellyfin again in My account.",
 	"frame.shell.closeSidebar": "Затваряне на страничната лента",
 	"frame.tabs.main": "Основно",
 	"frame.tabs.attention": ", има елементи, които изискват внимание",

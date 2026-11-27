@@ -38,6 +38,8 @@
 	"frame.feeds.update": "Ažuriranje je dostupno",
 	"frame.feeds.updateReady": "Verzija {version} je spremna",
 	"frame.feeds.updateLabel": "Ažuriranje",
+	"frame.feeds.playerLost": "The Jellyfin server connection was removed",
+	"frame.feeds.playerLostBody": "Playback is unavailable. Once the owner connects it again, link Jellyfin again in My account.",
 	"frame.shell.closeSidebar": "Zatvori bočnu traku",
 	"frame.tabs.main": "Glavno",
 	"frame.tabs.attention": ", stavke traže pažnju",

@@ -38,6 +38,8 @@
 	"frame.feeds.update": "Frissítés érhető el",
 	"frame.feeds.updateReady": "A(z) {version} verzió készen áll",
 	"frame.feeds.updateLabel": "Frissítés",
+	"frame.feeds.playerLost": "The Jellyfin server connection was removed",
+	"frame.feeds.playerLostBody": "Playback is unavailable. Once the owner connects it again, link Jellyfin again in My account.",
 	"frame.shell.closeSidebar": "Oldalsáv bezárása",
 	"frame.tabs.main": "Fő",
 	"frame.tabs.attention": ", elemek figyelmet igényelnek",

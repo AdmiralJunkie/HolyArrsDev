@@ -120,7 +120,8 @@ func (a *Auth) myMediaLinks(w http.ResponseWriter, r *http.Request) {
 		serverError(w, "media link", err)
 		return
 	}
-	writeJSON(w, http.StatusOK, map[string]any{"servers": servers, "links": links})
+	// player_lost: my player sign-in went with a Jellyfin server the owner removed.
+	writeJSON(w, http.StatusOK, map[string]any{"servers": servers, "links": links, "player_lost": a.playerLost(r.Context(), who.UserID)})
 }
 
 // myMediaLink signs in to my account on one of the owner's servers and links
@@ -312,6 +313,11 @@ func (a *Auth) unlinkMedia(w http.ResponseWriter, r *http.Request, userID int64,
 		}
 		if n == 0 {
 			return sql.ErrNoRows
+		}
+		if kind == ProviderJellyfin {
+			if err := a.clearPlayerLostTx(tx, userID); err != nil {
+				return err
+			}
 		}
 		// During first-run setup the link turned this sign-in way on (linkSetupServerTx); unlinking it there turns it off again.
 		inSetup = database.SettingOr(ctx, tx, settingsGroup, settingFirstRunDone, "") != "1"

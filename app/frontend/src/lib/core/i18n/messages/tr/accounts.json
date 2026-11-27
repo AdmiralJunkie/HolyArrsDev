@@ -406,6 +406,8 @@
 	"accounts.watch.keepForPlayback": "Keep me signed in to play here",
 	"accounts.watch.keepForPlaybackHint": "HolyArrs keeps a sign-in from {server}, never your password, so its player can play as you with your own resume points. Unlink to end it.",
 	"accounts.watch.keptForPlayback": "Signed in for playing here",
+	"accounts.watch.noServer": "The owner hasn't connected a Jellyfin server",
+	"accounts.watch.serverGone": "Server not connected",
 	"accounts.login.importPaused": "Oturumun sona erdi, bu yüzden içe aktarma duraklatıldı. Oturum aç, Kütüphane içe aktar sayfasını aç ve devam etmek için Tara düğmesine bas.",
 	"accounts.forgot.link": "Şifreni mi unuttun?",
 	"accounts.forgot.title": "Sahibi sıfırla",

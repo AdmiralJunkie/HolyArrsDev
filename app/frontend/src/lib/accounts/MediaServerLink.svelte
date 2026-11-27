@@ -11,8 +11,11 @@
 	import { toasts } from '#lib/core/toasts.svelte.ts';
 	import { mediaKindWord as kindWord, type MediaLink, type MediaServer } from './media-link.ts';
 	import LinkLogo from './LinkLogo.svelte';
+	import { playerStatus } from './player-status.svelte.ts';
 
-	let { links = $bindable(), open = $bindable() }: { links: MediaLink[]; open: MediaServer | null } = $props();
+	let { servers, links = $bindable(), open = $bindable() }: { servers: MediaServer[]; links: MediaLink[]; open: MediaServer | null } = $props();
+	// A link whose kind of server the owner no longer has connected shows greyed, with why.
+	const connected = (kind: string) => servers.some((s) => s.kind === kind);
 	let name = $state('');
 	let typed = $state('');
 	let keep = $state(false);
@@ -41,6 +44,7 @@
 			if (open.kind === 'jellyfin') body.keep_for_playback = keep;
 			const l = await api.post<MediaLink>(`/auth/media-link/${open.id}`, body);
 			links = [...links.filter((x) => x.provider !== l.provider), l];
+			if (l.provider === 'jellyfin') playerStatus.lost = false;
 			toasts.push(t('accounts.watch.linked', { name: l.name, server: open.name }), 'ok');
 			open = null;
 			name = '';
@@ -57,6 +61,7 @@
 		try {
 			await api.del(`/auth/media-link/${kind}`);
 			links = links.filter((l) => l.provider !== kind);
+			if (kind === 'jellyfin') playerStatus.lost = false;
 			unlinking = '';
 			toasts.push(t('accounts.watch.unlinked'), 'ok');
 		} catch (err) {
@@ -70,8 +75,8 @@
 {#if links.length}
 	<ul class="below my-links" data-testid="media-link">
 		{#each links as l (l.provider)}
-			<li>
-				<span class="small"><LinkLogo kind={l.provider} />{t('accounts.watch.as', { server: kindWord(l.provider), name: l.name })}{#if l.kept}{` · ${t('accounts.watch.keptForPlayback')}`}{/if}</span>
+			<li class:gone={!connected(l.provider)}>
+				<span class="small"><LinkLogo kind={l.provider} />{t('accounts.watch.as', { server: kindWord(l.provider), name: l.name })}{#if !connected(l.provider)}{` · ${t('accounts.watch.serverGone')}`}{:else if l.kept}{` · ${t('accounts.watch.keptForPlayback')}`}{/if}</span>
 				{#if unlinking === l.provider}
 					<Confirm action="link" onCancel={() => (unlinking = '')}>
 						<div class="row acts">
@@ -115,5 +120,6 @@
 	.form { display: flex; flex-direction: column; gap: 8px; width: min(100%, 360px); }
 	.field { display: flex; flex-direction: column; gap: 4px; }
 	.keep { display: flex; align-items: center; gap: 8px; }
+	.gone .small { opacity: var(--disabled-opacity); }
 	.acts { gap: 8px; flex-wrap: wrap; align-items: center; }
 </style>

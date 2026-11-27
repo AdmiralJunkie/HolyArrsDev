@@ -38,6 +38,8 @@
 	"frame.feeds.update": "Päivitys saatavilla",
 	"frame.feeds.updateReady": "Versio {version} on valmis",
 	"frame.feeds.updateLabel": "Päivitys",
+	"frame.feeds.playerLost": "The Jellyfin server connection was removed",
+	"frame.feeds.playerLostBody": "Playback is unavailable. Once the owner connects it again, link Jellyfin again in My account.",
 	"frame.shell.closeSidebar": "Sulje sivupalkki",
 	"frame.tabs.main": "Päävalikko",
 	"frame.tabs.attention": ", kohteet vaativat huomiota",

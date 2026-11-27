@@ -38,6 +38,8 @@
 	"frame.feeds.update": "Yra naujinys",
 	"frame.feeds.updateReady": "Versija {version} paruošta",
 	"frame.feeds.updateLabel": "Naujinys",
+	"frame.feeds.playerLost": "The Jellyfin server connection was removed",
+	"frame.feeds.playerLostBody": "Playback is unavailable. Once the owner connects it again, link Jellyfin again in My account.",
 	"frame.shell.closeSidebar": "Uždaryti šoninę juostą",
 	"frame.tabs.main": "Pagrindinė",
 	"frame.tabs.attention": ", yra elementų, kuriems reikia dėmesio",

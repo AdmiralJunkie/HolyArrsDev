@@ -25,6 +25,10 @@ type Handlers struct {
 	// PlexServerToken is the token of the owner's own Plex server at an
 	// address (accounts); nil turns the Plex sign-in shortcut off.
 	PlexServerToken func(ctx context.Context, url string) (string, error)
+	// Removing runs just before the owner removes a server, with its kind and
+	// address (HolyArrsDev: accounts ends the player sign-ins kept for it);
+	// nil does nothing.
+	Removing func(ctx context.Context, kind, url string)
 	// MediaSignInKey is the API key the owner's first-run Jellyfin or Emby
 	// sign-in made on that server.
 	MediaSignInKey func(ctx context.Context, kind, url string) (string, error)
@@ -143,9 +147,13 @@ func (h *Handlers) remove(w http.ResponseWriter, r *http.Request) {
 	if !ok {
 		return
 	}
-	if _, err := getServer(r.Context(), h.Store.Read(), id); err != nil {
+	m, err := getServer(r.Context(), h.Store.Read(), id)
+	if err != nil {
 		writeError(w, err)
 		return
+	}
+	if h.Removing != nil {
+		h.Removing(r.Context(), m.Kind, m.URL)
 	}
 	if err := Remove(r.Context(), h.Store, h.Vault, id); err != nil {
 		writeError(w, err)

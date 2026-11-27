@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/HolyArrs/holyarrs/app/backend/internal/core/database"
 	domain "github.com/HolyArrs/holyarrs/app/backend/internal/core/model"
 	"github.com/HolyArrs/holyarrs/app/backend/internal/core/secrets"
 )
@@ -90,9 +91,14 @@ func (a *Auth) keepPlayerTokenTx(ctx context.Context, tx *sql.Tx, userID int64, 
 		}
 		ref = id
 	}
-	_, err = tx.ExecContext(ctx, "UPDATE user_links SET token_secret_id = ? WHERE user_id = ? AND provider = ? AND external_id = ?",
-		ref, userID, kind, extID)
-	return err
+	if _, err := tx.ExecContext(ctx, "UPDATE user_links SET token_secret_id = ? WHERE user_id = ? AND provider = ? AND external_id = ?",
+		ref, userID, kind, extID); err != nil {
+		return err
+	}
+	if kind != ProviderJellyfin {
+		return nil
+	}
+	return a.clearPlayerLostTx(tx, userID)
 }
 
 // playerTokenOf is the player sign-in kept on userID's Jellyfin link
@@ -142,4 +148,84 @@ func (a *Auth) endPlayerToken(ctx context.Context, serverURL string, userID int6
 	if _, err := a.serverFetch(context.WithoutCancel(ctx), http.MethodPost, serverURL+"/Sessions/Logout", hdr, nil, nil); err != nil {
 		log.Printf("auth: ending the player sign-in of user %d: %v", userID, err)
 	}
+}
+
+// playerLostKey is the this_app setting that remembers a person's player
+// sign-in went with a removed Jellyfin server: "1" until they link again
+// (or unlink), "" otherwise. My account and the bell read it.
+func playerLostKey(userID int64) string { return "player_lost." + strconv.FormatInt(userID, 10) }
+
+// playerLost says userID's player sign-in went with a removed server.
+func (a *Auth) playerLost(ctx context.Context, userID int64) bool {
+	return database.SettingOr(ctx, a.s.Read(), settingsGroup, playerLostKey(userID), "") == "1"
+}
+
+// PlayerServerRemoving runs just before the owner removes a media server,
+// while its address is still known. When it is the last connected Jellyfin
+// server, every kept player sign-in is signed out there (so the devices leave
+// Jellyfin), deleted here, and its person is told (playerLost). The links
+// themselves stay: watched marks come back when the server is connected again.
+func (a *Auth) PlayerServerRemoving(ctx context.Context, kind, serverURL string) {
+	if kind != ProviderJellyfin || a.vault == nil {
+		return
+	}
+	ms, err := a.linkServers(ctx)
+	if err != nil {
+		log.Printf("auth: player sign-ins on a removed server: %v", err)
+	}
+	for _, m := range ms {
+		if m.Kind == ProviderJellyfin && !sameServer(m.URL, serverURL) {
+			return // another Jellyfin server stays connected
+		}
+	}
+	rows, err := a.s.Read().QueryContext(ctx, "SELECT user_id, token_secret_id FROM user_links WHERE provider = 'jellyfin' AND token_secret_id IS NOT NULL")
+	if err != nil {
+		log.Printf("auth: player sign-ins on a removed server: %v", err)
+		return
+	}
+	type kept struct{ user, ref int64 }
+	var all []kept
+	for rows.Next() {
+		var k kept
+		if err := rows.Scan(&k.user, &k.ref); err == nil {
+			all = append(all, k)
+		}
+	}
+	_ = rows.Close()
+	if len(all) == 0 {
+		return
+	}
+	for _, k := range all {
+		if tok, err := a.vault.Get(ctx, k.ref); err == nil && tok != "" {
+			a.endPlayerToken(ctx, serverURL, k.user, tok)
+		}
+	}
+	err = a.s.WriteCore(ctx, func(tx *sql.Tx) error {
+		for _, k := range all {
+			if err := secrets.DeleteTx(ctx, tx, k.ref); err != nil {
+				return err
+			}
+			if _, err := tx.ExecContext(ctx, "UPDATE user_links SET token_secret_id = NULL WHERE provider = 'jellyfin' AND user_id = ? AND token_secret_id = ?", k.user, k.ref); err != nil {
+				return err
+			}
+			if err := database.PutSetting(tx, settingsGroup, playerLostKey(k.user), "1", domain.System, a.now()); err != nil {
+				return err
+			}
+		}
+		return nil
+	})
+	if err != nil {
+		log.Printf("auth: player sign-ins on a removed server: %v", err)
+		return
+	}
+	log.Printf("auth: the Jellyfin server was removed; ended %d player sign-in(s)", len(all))
+}
+
+// clearPlayerLostTx forgets that userID's player sign-in went with a
+// removed server: they linked again or unlinked.
+func (a *Auth) clearPlayerLostTx(tx *sql.Tx, userID int64) error {
+	if database.SettingOr(context.Background(), tx, settingsGroup, playerLostKey(userID), "") == "" {
+		return nil
+	}
+	return database.PutSetting(tx, settingsGroup, playerLostKey(userID), "", domain.System, a.now())
 }

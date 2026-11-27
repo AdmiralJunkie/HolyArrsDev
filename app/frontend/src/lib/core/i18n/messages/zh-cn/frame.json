@@ -38,6 +38,8 @@
 	"frame.feeds.update": "有可用更新",
 	"frame.feeds.updateReady": "版本 {version} 已就绪",
 	"frame.feeds.updateLabel": "更新",
+	"frame.feeds.playerLost": "The Jellyfin server connection was removed",
+	"frame.feeds.playerLostBody": "Playback is unavailable. Once the owner connects it again, link Jellyfin again in My account.",
 	"frame.shell.closeSidebar": "关闭侧边栏",
 	"frame.tabs.main": "主要",
 	"frame.tabs.attention": "，有项目需要处理",

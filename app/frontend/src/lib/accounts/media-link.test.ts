@@ -10,7 +10,7 @@ const security = readFileSync(new URL('./AccountSecurity.svelte', import.meta.ur
 describe('My account: Jellyfin and Emby links live under Linked sign-ins', () => {
 	it('lists my media server links and the sign-in form inside the Linked sign-ins row', () => {
 		const row = security.slice(security.indexOf('id="linked-me"'));
-		expect(row.indexOf('<MediaServerLink bind:links={mediaLinks} bind:open={mediaOpen} />')).toBeGreaterThan(0);
+		expect(row.indexOf('<MediaServerLink servers={mediaServers} bind:links={mediaLinks} bind:open={mediaOpen} />')).toBeGreaterThan(0);
 		expect(security.match(/<MediaServerLink\b/g)).toHaveLength(1);
 	});
 	it('offers each connected server in the Link menu', () => {
@@ -40,7 +40,7 @@ describe('My account: keep a Jellyfin sign-in for the player (HolyArrsDev)', () 
 		expect(mine).toMatch(/if \(open\.kind === 'jellyfin'\) body\.keep_for_playback = keep;/);
 	});
 	it('says when a link keeps a sign-in for playing here', () => {
-		expect(mine).toMatch(/\{#if l\.kept\}\{` · \$\{t\('accounts\.watch\.keptForPlayback'\)\}`\}\{\/if\}/);
+		expect(mine).toMatch(/\{:else if l\.kept\}\{` · \$\{t\('accounts\.watch\.keptForPlayback'\)\}`\}\{\/if\}/);
 	});
 });
 
@@ -65,5 +65,46 @@ describe('Linked sign-ins: logos and unlinking', () => {
 		expect(mine).toMatch(/variant="destructive" type="button" onclick=\{\(\) => unlink\(l\.provider\)\}/);
 		expect(security).toMatch(/variant="destructive" type="button" onclick=\{unlinkPlexMine\}/);
 		expect(security).toMatch(/variant="destructive" type="button" onclick=\{\(\) => unlink\(l\)\}/);
+	});
+});
+
+describe('Linked sign-ins without a Jellyfin server (HolyArrsDev)', () => {
+	it('shows Jellyfin greyed out, with why, when no Jellyfin server is connected', () => {
+		expect(security).toMatch(/\{#if !jellyfinUp\}[\s\S]*?title=\{t\('accounts\.watch\.noServer'\)\}[\s\S]*?<Button type="button" disabled[^>]*data-testid="media-link-none">Jellyfin<\/Button>/);
+		expect(security).toMatch(/\.no-server \{[^}]*cursor: not-allowed/);
+	});
+	it('greys a link whose server is gone and says so instead of the playback note', () => {
+		expect(mine).toMatch(/<li class:gone=\{!connected\(l\.provider\)\}>/);
+		expect(mine).toMatch(/\{#if !connected\(l\.provider\)\}\{` · \$\{t\('accounts\.watch\.serverGone'\)\}`\}\{:else if l\.kept\}/);
+	});
+	it('clears the lost alert when I link Jellyfin again or unlink it', () => {
+		expect(mine).toMatch(/if \(l\.provider === 'jellyfin'\) playerStatus\.lost = false;/);
+		expect(mine).toMatch(/if \(kind === 'jellyfin'\) playerStatus\.lost = false;/);
+	});
+});
+
+describe('playerPins (HolyArrsDev)', () => {
+	it('pins one warning that opens My account only while the player sign-in is lost', async () => {
+		const { playerPins, playerStatus } = await import('./player-status.svelte.ts');
+		playerStatus.lost = false;
+		expect(playerPins()).toEqual([]);
+		playerStatus.lost = true;
+		const p = playerPins();
+		expect(p).toHaveLength(1);
+		expect(p[0]).toMatchObject({ key: 'player-lost', tone: 'warn', href: '/account' });
+		playerStatus.lost = false;
+	});
+});
+
+describe('Account menu dot (HolyArrsDev)', () => {
+	const menu = readFileSync(new URL('../ui/Menu.svelte', import.meta.url), 'utf8');
+	const layout = readFileSync(new URL('../../routes/+layout.svelte', import.meta.url), 'utf8');
+	it('menu items can carry the red dot', () => {
+		expect(menu.match(/\{#if item\.dot\}<span class="flag"/g)).toHaveLength(2);
+		expect(menu).toMatch(/\.flag \{[^}]*background: var\(--fail\)/);
+	});
+	it('lights it on Account while the player sign-in is lost, and counts the pin on the bell', () => {
+		expect(layout).toMatch(/href: to\('\/account'\), dot: playerStatus\.lost/);
+		expect(layout).toMatch(/settingsPages, \[\.\.\.playerPins\(\),/);
 	});
 });

@@ -38,6 +38,8 @@
 	"frame.feeds.update": "புதுப்பிப்பு உள்ளது",
 	"frame.feeds.updateReady": "பதிப்பு {version} தயார்",
 	"frame.feeds.updateLabel": "புதுப்பி",
+	"frame.feeds.playerLost": "The Jellyfin server connection was removed",
+	"frame.feeds.playerLostBody": "Playback is unavailable. Once the owner connects it again, link Jellyfin again in My account.",
 	"frame.shell.closeSidebar": "பக்கப்பட்டியை மூடு",
 	"frame.tabs.main": "முதன்மை",
 	"frame.tabs.attention": ", உருப்படிகளுக்குக் கவனம் தேவை",

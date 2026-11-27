@@ -406,6 +406,8 @@
 	"accounts.watch.keepForPlayback": "Keep me signed in to play here",
 	"accounts.watch.keepForPlaybackHint": "HolyArrs keeps a sign-in from {server}, never your password, so its player can play as you with your own resume points. Unlink to end it.",
 	"accounts.watch.keptForPlayback": "Signed in for playing here",
+	"accounts.watch.noServer": "The owner hasn't connected a Jellyfin server",
+	"accounts.watch.serverGone": "Server not connected",
 	"accounts.login.importPaused": "การลงชื่อเข้าใช้ของคุณหมดอายุ การนำเข้าจึงหยุดชั่วคราว ลงชื่อเข้าใช้ เปิด นำเข้าไลบรารี แล้วกด สแกน เพื่อทำต่อ",
 	"accounts.forgot.link": "ลืมรหัสผ่าน?",
 	"accounts.forgot.title": "รีเซ็ตเจ้าของ",

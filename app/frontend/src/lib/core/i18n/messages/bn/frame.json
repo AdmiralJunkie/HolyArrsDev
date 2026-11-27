@@ -38,6 +38,8 @@
 	"frame.feeds.update": "আপডেট আছে",
 	"frame.feeds.updateReady": "ভার্সন {version} প্রস্তুত",
 	"frame.feeds.updateLabel": "আপডেট",
+	"frame.feeds.playerLost": "The Jellyfin server connection was removed",
+	"frame.feeds.playerLostBody": "Playback is unavailable. Once the owner connects it again, link Jellyfin again in My account.",
 	"frame.shell.closeSidebar": "সাইডবার বন্ধ করুন",
 	"frame.tabs.main": "প্রধান",
 	"frame.tabs.attention": ", কিছু আইটেম দেখা দরকার",
