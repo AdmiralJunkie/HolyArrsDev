@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/HolyArrs/holyarrs/app/backend/internal/core/database"
 	domain "github.com/HolyArrs/holyarrs/app/backend/internal/core/model"
@@ -145,7 +146,9 @@ func (a *Auth) endPlayerToken(ctx context.Context, serverURL string, userID int6
 	authz := fmt.Sprintf(`MediaBrowser Client="%s", Device="%s", DeviceId="%s", Version="1", Token=%q`,
 		product, playerDeviceName, a.playerDeviceID(ctx, userID), tok)
 	hdr := map[string]string{"Authorization": authz, "X-Emby-Token": tok}
-	if _, err := a.serverFetch(context.WithoutCancel(ctx), http.MethodPost, serverURL+"/Sessions/Logout", hdr, nil, nil); err != nil {
+	// A saved address may end in "/": "//Sessions/Logout" would only get a redirect, which is not followed.
+	u := strings.TrimRight(serverURL, "/") + "/Sessions/Logout"
+	if _, err := a.serverFetch(context.WithoutCancel(ctx), http.MethodPost, u, hdr, nil, nil); err != nil {
 		log.Printf("auth: ending the player sign-in of user %d: %v", userID, err)
 	}
 }
