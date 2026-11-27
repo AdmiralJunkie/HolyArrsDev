@@ -10806,7 +10806,7 @@
     },
     "/api/v1/auth/media-link/{server}": {
       "post": {
-        "description": "Signs in to my account on that server with its name and password (sent to the server only, never kept) and links it to me, replacing my earlier link of that kind; only the account id there is kept. Needs a recent local password.",
+        "description": "Signs in to my account on that server with its name and password (sent to the server only, never kept) and links it to me, replacing my earlier link of that kind; only the account id there is kept, unless a Jellyfin link sends \"keep_for_playback\": true, which also keeps that sign-in (sealed, never shown) for the built-in player until I link again without it or unlink. Needs a recent local password.",
         "operationId": "myMediaLink",
         "parameters": [
           {

@@ -51,6 +51,8 @@ type UserView struct {
 type LinkView struct {
 	Provider string `json:"provider"`
 	Name     string `json:"name"`
+	// Kept: a Jellyfin sign-in is kept on this link for the player.
+	Kept bool `json:"kept,omitempty"`
 }
 
 // SkipLocal says sign-in is skipped on the local network for someone who is

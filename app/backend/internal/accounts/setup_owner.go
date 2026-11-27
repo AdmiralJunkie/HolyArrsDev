@@ -24,6 +24,9 @@ type creds struct {
 	Code     string `json:"code,omitempty"` // ignored; first run needs no code
 	// First run only: the owner's display name, saved with the account.
 	DisplayName string `json:"display_name,omitempty"`
+	// Linking a Jellyfin account from My account only: keep the server's
+	// sign-in so the built-in player can play as this person.
+	KeepForPlayback bool `json:"keep_for_playback,omitempty"`
 }
 
 func (a *Auth) owner(ctx context.Context) (int64, string, bool) {

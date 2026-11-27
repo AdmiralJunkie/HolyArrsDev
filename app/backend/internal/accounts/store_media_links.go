@@ -1,10 +1,14 @@
 package accounts
 
-import "context"
+import (
+	"context"
+
+	"github.com/HolyArrs/holyarrs/app/backend/internal/core/secrets"
+)
 
 // mediaLinksOf lists a person's Jellyfin and Emby links.
 func mediaLinksOf(ctx context.Context, q conn, userID int64) ([]LinkView, error) {
-	rows, err := q.QueryContext(ctx, `SELECT provider, external_name FROM user_links
+	rows, err := q.QueryContext(ctx, `SELECT provider, external_name, token_secret_id IS NOT NULL FROM user_links
 		WHERE user_id = ? AND provider IN ('jellyfin', 'emby') ORDER BY provider`, userID)
 	if err != nil {
 		return nil, err
@@ -13,7 +17,7 @@ func mediaLinksOf(ctx context.Context, q conn, userID int64) ([]LinkView, error)
 	out := []LinkView{}
 	for rows.Next() {
 		var l LinkView
-		if err := rows.Scan(&l.Provider, &l.Name); err != nil {
+		if err := rows.Scan(&l.Provider, &l.Name, &l.Kept); err != nil {
 			return nil, err
 		}
 		out = append(out, l)
@@ -21,8 +25,16 @@ func mediaLinksOf(ctx context.Context, q conn, userID int64) ([]LinkView, error)
 	return out, rows.Err()
 }
 
-// deleteMediaLink removes a person's link of one kind and returns how many went.
+// deleteMediaLink removes a person's link of one kind, with any player
+// sign-in kept on it, and returns how many links went.
 func deleteMediaLink(ctx context.Context, q conn, userID int64, provider string) (int64, error) {
+	ids, err := tokenIDs(ctx, q, "SELECT token_secret_id FROM user_links WHERE token_secret_id IS NOT NULL AND user_id = ? AND provider = ?", userID, provider)
+	if err != nil {
+		return 0, err
+	}
+	if err := secrets.DeleteTx(ctx, q, ids...); err != nil {
+		return 0, err
+	}
 	res, err := q.ExecContext(ctx, "DELETE FROM user_links WHERE user_id = ? AND provider = ?", userID, provider)
 	if err != nil {
 		return 0, err

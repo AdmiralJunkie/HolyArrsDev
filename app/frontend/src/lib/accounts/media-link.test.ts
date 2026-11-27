@@ -23,3 +23,13 @@ describe('accountChoice', () => {
 		expect(accountChoice({ id: 'k', name: 'Kid', taken_by: 9, taken_name: 'leo' }, 4, t)).toEqual({ label: 'Kid · settings.users.accountLinked leo', taken: true });
 	});
 });
+
+describe('My account: keep a Jellyfin sign-in for the player (HolyArrsDev)', () => {
+	it('offers keeping only on a Jellyfin server and sends it only there', () => {
+		expect(mine).toMatch(/\{#if open\.kind === 'jellyfin'\}[\s\S]*data-testid="media-link-keep"/);
+		expect(mine).toMatch(/if \(open\.kind === 'jellyfin'\) body\.keep_for_playback = keep;/);
+	});
+	it('says when a link keeps a sign-in for playing here', () => {
+		expect(mine).toMatch(/\{#if l\.kept\} · \{t\('accounts\.watch\.keptForPlayback'\)\}\{\/if\}/);
+	});
+});

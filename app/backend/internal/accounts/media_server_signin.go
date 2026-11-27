@@ -14,6 +14,9 @@ type mediaMe struct {
 	ID, Name string
 	// Limited is set when the server limits what this person may watch.
 	Limited bool
+	// Token is the server's sign-in, kept for the player; "" unless the
+	// check was made as a player device and the request asked to keep it.
+	Token string
 }
 
 func (a *Auth) mediaServerLogin(w http.ResponseWriter, r *http.Request) {
@@ -49,11 +52,23 @@ func (a *Auth) mediaWay(w http.ResponseWriter, r *http.Request, kind string) (Wa
 // owner's Jellyfin or Emby server, with the sign-in limits. It returns the
 // account and the place to record, or false after answering.
 func (a *Auth) checkMediaServer(w http.ResponseWriter, r *http.Request, kind string, v WayView) (mediaMe, place, bool) {
+	return a.checkMediaServerAs(w, r, kind, v, "")
+}
+
+// checkMediaServerAs is checkMediaServer, except that when player is set
+// (a per-person device id, see playerDeviceID) and the request asks for
+// keep_for_playback, the sign-in is made as that device and the server's
+// token is returned in Token instead of being ended. A separate device id
+// matters: Jellyfin ends the earlier token of the same person and device id
+// at every new sign-in, so sharing HolyArrs's own id would let any later
+// "Sign in with Jellyfin" end the kept one.
+func (a *Auth) checkMediaServerAs(w http.ResponseWriter, r *http.Request, kind string, v WayView, player string) (mediaMe, place, bool) {
 	ctx := r.Context()
 	c, ok := readCreds(w, r)
 	if !ok {
 		return mediaMe{}, place{}, false
 	}
+	keep := player != "" && c.KeepForPlayback
 	if c.Name == "" || len(c.Name) > 128 || len(c.Password) > MaxPassword {
 		fail(w, http.StatusBadRequest, "give your "+kind+" name and password")
 		return mediaMe{}, place{}, false
@@ -84,7 +99,11 @@ func (a *Auth) checkMediaServer(w http.ResponseWriter, r *http.Request, kind str
 		fail(w, http.StatusTooManyRequests, "too many failed sign-ins; wait a little and try again")
 		return mediaMe{}, place{}, false
 	}
-	authz := fmt.Sprintf(`MediaBrowser Client="%s", Device="%s", DeviceId="%s", Version="1"`, product, product, a.clientID(ctx))
+	device, deviceID := product, a.clientID(ctx)
+	if keep {
+		device, deviceID = playerDeviceName, player
+	}
+	authz := fmt.Sprintf(`MediaBrowser Client="%s", Device="%s", DeviceId="%s", Version="1"`, product, device, deviceID)
 	hdr := map[string]string{"Authorization": authz, "X-Emby-Authorization": authz}
 	var got struct {
 		User struct {
@@ -143,8 +162,9 @@ func (a *Auth) checkMediaServer(w http.ResponseWriter, r *http.Request, kind str
 		fail(w, http.StatusBadGateway, "the "+kind+" server gave an odd answer; ask the owner")
 		return mediaMe{}, place{}, false
 	}
-	if got.AccessToken != "" {
-		// HolyArrs does not keep the server's token: end that session now.
+	if got.AccessToken != "" && (!keep || got.User.Policy.IsDisabled) {
+		// HolyArrs keeps the server's token only for the player: otherwise
+		// end that session now.
 		lh := map[string]string{"Authorization": fmt.Sprintf("%s, Token=%q", authz, got.AccessToken)}
 		lh["X-Emby-Token"] = got.AccessToken
 		_, _ = a.serverFetch(context.WithoutCancel(ctx), http.MethodPost, v.URL+"/Sessions/Logout", lh, nil, nil)
@@ -159,5 +179,9 @@ func (a *Auth) checkMediaServer(w http.ResponseWriter, r *http.Request, kind str
 	a.undoFailLocked(marks[:2]) // this attempt's address counts only (ipKey, altKey)
 	delete(a.fails, userKey)
 	a.mu.Unlock()
-	return mediaMe{ID: got.User.ID, Name: got.User.Name, Limited: got.User.Policy.MaxParentalRating != nil}, place{ipKey, userKey, sure}, true
+	me := mediaMe{ID: got.User.ID, Name: got.User.Name, Limited: got.User.Policy.MaxParentalRating != nil}
+	if keep {
+		me.Token = got.AccessToken
+	}
+	return me, place{ipKey, userKey, sure}, true
 }

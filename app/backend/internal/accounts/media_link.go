@@ -140,7 +140,11 @@ func (a *Auth) myMediaLink(w http.ResponseWriter, r *http.Request) {
 		fail(w, http.StatusNotFound, "no such media server")
 		return
 	}
-	got, _, ok := a.checkMediaServer(w, r, m.Kind, WayView{URL: m.URL})
+	player := ""
+	if m.Kind == ProviderJellyfin && a.vault != nil {
+		player = a.playerDeviceID(ctx, who.UserID)
+	}
+	got, _, ok := a.checkMediaServerAs(w, r, m.Kind, WayView{URL: m.URL}, player)
 	if !ok {
 		return
 	}
@@ -157,13 +161,20 @@ func (a *Auth) myMediaLink(w http.ResponseWriter, r *http.Request) {
 		if err := a.mediaLinkSessionFreshTx(tx, proof); err != nil {
 			return err
 		}
-		return a.linkMediaTx(ctx, tx, who.UserID, m, got.ID, got.Name)
+		if err := a.linkMediaTx(ctx, tx, who.UserID, m, got.ID, got.Name); err != nil {
+			return err
+		}
+		return a.keepPlayerTokenTx(ctx, tx, who.UserID, m.Kind, got.ID, got.Token)
 	})
+	if err != nil && got.Token != "" {
+		// Nothing was kept: end the sign-in made for the player.
+		a.endPlayerToken(ctx, m.URL, who.UserID, got.Token)
+	}
 	if !a.mediaLinkDone(w, r, who.UserID, m.Kind, got.Name, err) {
 		return
 	}
 	log.Printf("auth: user %d linked a %s account from My account", who.UserID, m.Kind)
-	writeJSON(w, http.StatusOK, LinkView{Provider: m.Kind, Name: got.Name})
+	writeJSON(w, http.StatusOK, LinkView{Provider: m.Kind, Name: got.Name, Kept: got.Token != ""})
 }
 
 // mediaLinkDone answers a failed link, or records a made one and says true.
