@@ -2,6 +2,14 @@
 
 All notable changes to HolyArrs are listed here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/).
 
+## [1.3.6] - 2026-11-27
+### Fixed
+- Plugin lists update again after the signing key change.
+### Community plugins
+- [Discord](https://github.com/NotCavnfox/holyarrs-discord) by [@NotCavnfox](https://github.com/NotCavnfox)
+- [FlareSolverr](https://github.com/wozniakpawel/holyarrs-flaresolverr) by [@wozniakpawel](https://github.com/wozniakpawel)
+- [Language Checker](https://github.com/roychassi/language-checker) by [@roychassi](https://github.com/roychassi)
+
 ## [1.3.5] - 2026-11-27
 ### Fixed
 - A missing movie file no longer blocks its new file. ([#798](https://github.com/HolyArrs/HolyArrs/issues/798))
