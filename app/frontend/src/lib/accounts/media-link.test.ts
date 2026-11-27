@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { accountChoice, mediaServerLabel } from './media-link.ts';
+import { accountChoice, accountIssues, linkProblem, mediaServerLabel } from './media-link.ts';
 
 const mine = readFileSync(new URL('./MediaServerLink.svelte', import.meta.url), 'utf8');
 const t = (key: string, vars?: Record<string, string | number>) => key + (vars ? ` ${vars.name}` : '');
@@ -73,9 +73,11 @@ describe('Linked sign-ins without a Jellyfin server (HolyArrsDev)', () => {
 		expect(security).toMatch(/\{#if !jellyfinUp\}[\s\S]*?title=\{t\('accounts\.watch\.noServer'\)\}[\s\S]*?<Button type="button" disabled[^>]*data-testid="media-link-none">Jellyfin<\/Button>/);
 		expect(security).toMatch(/\.no-server \{[^}]*cursor: not-allowed/);
 	});
-	it('greys a link whose server is gone and says so instead of the playback note', () => {
-		expect(mine).toMatch(/<li class:gone=\{!connected\(l\.provider\)\}>/);
-		expect(mine).toMatch(/\{#if !connected\(l\.provider\)\}\{` · \$\{t\('accounts\.watch\.serverGone'\)\}`\}\{:else if l\.kept\}/);
+	it('greys a link whose server is gone or offline, with why in red, and offers Reconnect', () => {
+		expect(mine).toMatch(/<li class:gone=\{problem === 'gone' \|\| problem === 'offline'\}>/);
+		expect(mine).toMatch(/\{#if problem\}<span class="why"/);
+		expect(mine).toMatch(/\{#if problem === 'reconnect' && unlinking !== l\.provider\}[\s\S]*?onclick=\{\(\) => reconnect\(l\)\}/);
+		expect(mine).toMatch(/\.why \{[^}]*color: var\(--fail-text, var\(--fail\)\)/);
 	});
 	it('clears the lost alert when I link Jellyfin again or unlink it', () => {
 		expect(mine).toMatch(/if \(l\.provider === 'jellyfin'\) playerStatus\.lost = false;/);
@@ -106,5 +108,32 @@ describe('Account menu dot (HolyArrsDev)', () => {
 	it('lights it on Account while the player sign-in is lost, and counts the pin on the bell', () => {
 		expect(layout).toMatch(/href: to\('\/account'\), dot: playerStatus\.lost/);
 		expect(layout).toMatch(/settingsPages, \[\.\.\.playerPins\(\),/);
+	});
+});
+
+describe('linkProblem and accountIssues (HolyArrsDev)', () => {
+	const jf = { id: 7, name: 'Den', kind: 'jellyfin' as const };
+	const mum = { provider: 'jellyfin', name: 'Mum' };
+	it('says gone without a server of that kind, offline when every one failed its last call', () => {
+		expect(linkProblem(mum, [], false)).toBe('gone');
+		expect(linkProblem(mum, [{ ...jf, offline: true }], false)).toBe('offline');
+		expect(linkProblem(mum, [{ ...jf, offline: true }, { ...jf, id: 8 }], false)).toBe(null);
+	});
+	it('asks to reconnect a Jellyfin link whose sign-in for playing was lost, until one is kept again', () => {
+		expect(linkProblem(mum, [jf], true)).toBe('reconnect');
+		expect(linkProblem({ ...mum, kept: true }, [jf], true)).toBe(null);
+		expect(linkProblem({ provider: 'emby', name: 'Mum' }, [{ ...jf, kind: 'emby' as const }], true)).toBe(null);
+		expect(linkProblem(mum, [jf], false)).toBe(null);
+	});
+	it('counts the links that need attention', () => {
+		expect(accountIssues([mum, { provider: 'emby', name: 'X' }], [jf], true)).toBe(2);
+		expect(accountIssues([mum], [jf], false)).toBe(0);
+	});
+});
+
+describe('My account pill (HolyArrsDev)', () => {
+	const settingsLayout = readFileSync(new URL('../../routes/settings/+layout.svelte', import.meta.url), 'utf8');
+	it('shows how many of my links need attention at the top of My account', () => {
+		expect(settingsLayout).toMatch(/currentSection\?\.href === '\/settings\/account' && playerStatus\.issues > 0\}[\s\S]*?<StatusPill kind="failed" label=\{stateWords\(\{ state: 'attention', count: playerStatus\.issues \}\)\}/);
 	});
 });

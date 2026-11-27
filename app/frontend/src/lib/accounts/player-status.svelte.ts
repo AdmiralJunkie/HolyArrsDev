@@ -3,12 +3,16 @@
 // and puts a red dot on Account while it is true.
 import { api } from '#lib/core/api.ts';
 import { t } from '#lib/core/i18n/i18n.svelte.ts';
+import { accountIssues, type MediaLink, type MediaServer } from './media-link.ts';
 
-export const playerStatus = $state({ lost: false });
+/** lost: my player sign-in went with a removed server; issues: my media links that need attention (My account's pill). */
+export const playerStatus = $state({ lost: false, issues: 0 });
 
 export async function loadPlayerStatus(): Promise<void> {
-	const r = await api.get<{ player_lost?: boolean }>('/auth/media-link').catch(() => null);
-	if (r) playerStatus.lost = !!r.player_lost;
+	const r = await api.get<{ servers?: MediaServer[]; links?: MediaLink[]; player_lost?: boolean }>('/auth/media-link').catch(() => null);
+	if (!r) return;
+	playerStatus.lost = !!r.player_lost;
+	playerStatus.issues = accountIssues(r.links ?? [], r.servers ?? [], playerStatus.lost);
 }
 
 /** The pinned alert while it is lost (the alerts panel's PinnedAlert shape); none otherwise. */

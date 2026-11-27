@@ -18,7 +18,7 @@ func (l *Linker) LinkServers(ctx context.Context) ([]accounts.LinkServer, error)
 	out := []accounts.LinkServer{}
 	for _, m := range ms {
 		if (m.Kind == "jellyfin" || m.Kind == "emby") && m.TokenSecretID != nil {
-			out = append(out, accounts.LinkServer{ID: m.ID, Name: m.Name, Kind: m.Kind, URL: m.URL})
+			out = append(out, accounts.LinkServer{ID: m.ID, Name: m.Name, Kind: m.Kind, URL: m.URL, Offline: m.LastError != ""})
 		}
 	}
 	return out, nil

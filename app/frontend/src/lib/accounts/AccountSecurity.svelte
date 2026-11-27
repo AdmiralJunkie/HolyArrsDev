@@ -11,7 +11,7 @@
 	import MediaServerLink from './MediaServerLink.svelte';
 	import LinkLogo from './LinkLogo.svelte';
 	import { playerStatus } from './player-status.svelte.ts';
-	import { mediaServerLabel, type MediaLink, type MediaServer } from './media-link.ts';
+	import { accountIssues, mediaServerLabel, type MediaLink, type MediaServer } from './media-link.ts';
 	import { strong } from './strong-error.ts';
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
@@ -45,6 +45,10 @@
 		mediaLinks = r?.links ?? [];
 		if (r) playerStatus.lost = !!r.player_lost;
 	}
+	// The pill at the top of My account: how many of my media links need attention.
+	$effect(() => {
+		playerStatus.issues = accountIssues(mediaLinks, mediaServers, playerStatus.lost);
+	});
 
 	onMount(() => {
 		void loadLinks();

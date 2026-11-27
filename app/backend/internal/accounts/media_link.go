@@ -28,6 +28,9 @@ type LinkServer struct {
 	Name string
 	Kind string
 	URL  string
+	// Offline: HolyArrs's last call to the server failed (its stored
+	// last_error, as the Status page shows it). HolyArrsDev.
+	Offline bool
 }
 
 // ServerAccount is one account on a media server.
@@ -92,11 +95,13 @@ func (a *Auth) linkServer(ctx context.Context, raw string) (LinkServer, bool, er
 	return LinkServer{}, false, err
 }
 
-// mediaServerView is a server as people see it: no address.
+// mediaServerView is a server as people see it: no address, and only
+// whether it is answering, never why not.
 type mediaServerView struct {
-	ID   int64  `json:"id"`
-	Name string `json:"name"`
-	Kind string `json:"kind"`
+	ID      int64  `json:"id"`
+	Name    string `json:"name"`
+	Kind    string `json:"kind"`
+	Offline bool   `json:"offline,omitempty"`
 }
 
 // myMediaLinks lists the servers I may link to and my Jellyfin and Emby links.
@@ -113,7 +118,7 @@ func (a *Auth) myMediaLinks(w http.ResponseWriter, r *http.Request) {
 	}
 	servers := []mediaServerView{}
 	for _, m := range ms {
-		servers = append(servers, mediaServerView{m.ID, m.Name, m.Kind})
+		servers = append(servers, mediaServerView{ID: m.ID, Name: m.Name, Kind: m.Kind, Offline: m.Offline})
 	}
 	links, err := mediaLinksOf(r.Context(), a.s.Read(), who.UserID)
 	if err != nil {
@@ -390,7 +395,7 @@ func (a *Auth) serverAccounts(w http.ResponseWriter, r *http.Request) {
 	}
 	out := []serverView{}
 	for _, m := range ms {
-		v := serverView{mediaServerView: mediaServerView{m.ID, m.Name, m.Kind}, Accounts: []ServerAccount{}}
+		v := serverView{mediaServerView: mediaServerView{ID: m.ID, Name: m.Name, Kind: m.Kind}, Accounts: []ServerAccount{}}
 		if got, err := a.media.Accounts(r.Context(), m.ID); err != nil {
 			log.Printf("auth: accounts of %s: %v", m.Name, err)
 			kind := m.Kind

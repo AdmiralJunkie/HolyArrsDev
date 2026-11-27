@@ -9,13 +9,26 @@
 	import { api } from '#lib/core/api.ts';
 	import { plainMessage as message } from '#lib/core/settings.ts';
 	import { toasts } from '#lib/core/toasts.svelte.ts';
-	import { mediaKindWord as kindWord, type MediaLink, type MediaServer } from './media-link.ts';
+	import { linkProblem, mediaKindWord as kindWord, type LinkProblem, type MediaLink, type MediaServer } from './media-link.ts';
 	import LinkLogo from './LinkLogo.svelte';
 	import { playerStatus } from './player-status.svelte.ts';
 
 	let { servers, links = $bindable(), open = $bindable() }: { servers: MediaServer[]; links: MediaLink[]; open: MediaServer | null } = $props();
-	// A link whose kind of server the owner no longer has connected shows greyed, with why.
-	const connected = (kind: string) => servers.some((s) => s.kind === kind);
+	// A link whose server is gone or not answering shows greyed with why in red; one whose sign-in for playing went
+	// with a removed server offers Reconnect (linkProblem).
+	const why = (p: LinkProblem, kind: string) =>
+		p === 'gone' ? t('accounts.watch.problemGone', { server: kindWord(kind) }) : p === 'offline' ? t('accounts.watch.problemOffline', { server: kindWord(kind) }) : p === 'reconnect' ? t('accounts.watch.problemReconnect') : '';
+
+	// Reconnect: the sign-in form for that server, my name there filled in and the tickbox on.
+	function reconnect(l: MediaLink) {
+		const s = servers.find((x) => x.kind === l.provider && !x.offline) ?? servers.find((x) => x.kind === l.provider);
+		if (!s) return;
+		shownFor = s.id;
+		error = '';
+		keep = true;
+		name = l.name;
+		open = s;
+	}
 	let name = $state('');
 	let typed = $state('');
 	let keep = $state(false);
@@ -75,8 +88,15 @@
 {#if links.length}
 	<ul class="below my-links" data-testid="media-link">
 		{#each links as l (l.provider)}
-			<li class:gone={!connected(l.provider)}>
-				<span class="small"><LinkLogo kind={l.provider} />{t('accounts.watch.as', { server: kindWord(l.provider), name: l.name })}{#if !connected(l.provider)}{` · ${t('accounts.watch.serverGone')}`}{:else if l.kept}{` · ${t('accounts.watch.keptForPlayback')}`}{/if}</span>
+			{@const problem = linkProblem(l, servers, playerStatus.lost)}
+			<li class:gone={problem === 'gone' || problem === 'offline'}>
+				<span class="what">
+					<span class="small"><LinkLogo kind={l.provider} />{t('accounts.watch.as', { server: kindWord(l.provider), name: l.name })}{#if problem === 'gone'}{` · ${t('accounts.watch.serverGone')}`}{:else if problem === 'offline'}{` · ${t('accounts.watch.serverOffline')}`}{:else if l.kept}{` · ${t('accounts.watch.keptForPlayback')}`}{/if}</span>
+					{#if problem}<span class="why" data-testid="media-link-why">{why(problem, l.provider)}</span>{/if}
+				</span>
+				{#if problem === 'reconnect' && unlinking !== l.provider}
+					<Button variant="secondary" type="button" onclick={() => reconnect(l)} data-testid="media-link-reconnect">{t('accounts.watch.reconnect')}</Button>
+				{/if}
 				{#if unlinking === l.provider}
 					<Confirm action="link" onCancel={() => (unlinking = '')}>
 						<div class="row acts">
@@ -121,5 +141,8 @@
 	.field { display: flex; flex-direction: column; gap: 4px; }
 	.keep { display: flex; align-items: center; gap: 8px; }
 	.gone .small { opacity: var(--disabled-opacity); }
+	.what { display: flex; flex-direction: column; gap: 3px; min-width: 0; margin-inline-end: auto; }
+	/* What is wrong, in red (as Library folders say why a folder is not working). */
+	.why { font: 500 12px/1.3 var(--font-ui); color: var(--fail-text, var(--fail)); }
 	.acts { gap: 8px; flex-wrap: wrap; align-items: center; }
 </style>

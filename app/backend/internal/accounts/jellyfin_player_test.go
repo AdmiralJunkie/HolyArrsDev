@@ -244,3 +244,19 @@ func TestRemovingJellyfinEndsPlayerSignIns(t *testing.T) {
 		t.Fatalf("after linking again: %s", out)
 	}
 }
+
+// My media links say a server is not answering (its last call failed), never why.
+func TestMediaLinksSayOffline(t *testing.T) {
+	f := gated(t, Options{})
+	f.a.SetMediaLinks(MediaLinks{
+		Servers: func(context.Context) ([]LinkServer, error) {
+			return []LinkServer{{ID: 7, Name: "Den", Kind: "jellyfin", URL: "http://den.example", Offline: true}}, nil
+		},
+		Accounts: func(context.Context, int64) ([]ServerAccount, error) { return nil, nil },
+	})
+	own := ownerOf(t, f)
+	_, out := own.do(t, f, "GET", "/api/v1/auth/media-link", "")
+	if !strings.Contains(out, `"offline":true`) || strings.Contains(out, "den.example") {
+		t.Fatalf("links: %s", out)
+	}
+}

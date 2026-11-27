@@ -7,7 +7,7 @@ export function accountChoice(a: ServerAccount, userId: number, t: (key: string,
 }
 
 // My account > Linked sign-ins: the owner's Jellyfin and Emby servers I may link, and my links to them.
-export type MediaServer = { id: number; name: string; kind: 'jellyfin' | 'emby' };
+export type MediaServer = { id: number; name: string; kind: 'jellyfin' | 'emby'; offline?: boolean };
 export type MediaLink = { provider: string; name: string; kept?: boolean };
 export const mediaKindWord = (k: string) => (k === 'emby' ? 'Emby' : 'Jellyfin');
 
@@ -17,4 +17,23 @@ export function mediaServerLabel(m: { name: string; kind: string }): string {
 	const name = m.name.trim();
 	if (!name) return kind;
 	return name.toLowerCase().includes(kind.toLowerCase()) ? name : `${kind} · ${name}`;
+}
+
+/**
+ * What is wrong with one of my media server links (HolyArrsDev), or null:
+ * gone: the owner has no server of that kind connected; offline: every one of that kind failed its last call;
+ * reconnect: a Jellyfin server is back but my sign-in for playing went with the removed one (playerLost).
+ */
+export type LinkProblem = 'gone' | 'offline' | 'reconnect' | null;
+export function linkProblem(l: MediaLink, servers: MediaServer[], playerLost: boolean): LinkProblem {
+	const mine = servers.filter((s) => s.kind === l.provider);
+	if (!mine.length) return 'gone';
+	if (mine.every((s) => s.offline)) return 'offline';
+	if (l.provider === 'jellyfin' && playerLost && !l.kept) return 'reconnect';
+	return null;
+}
+
+/** How many of my media server links need attention (My account's page pill). */
+export function accountIssues(links: MediaLink[], servers: MediaServer[], playerLost: boolean): number {
+	return links.filter((l) => linkProblem(l, servers, playerLost)).length;
 }
