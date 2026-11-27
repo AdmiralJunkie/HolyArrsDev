@@ -1,0 +1,63 @@
+name: HolyArrsDev - Checks
+
+# Fork-only (AdmiralJunkie/HolyArrsDev). Builds, vets and tests the backend and
+# runs the frontend unit tests on every branch except main, which stays a clean
+# copy of upstream. Not meant for upstream pull requests.
+
+on:
+  push:
+    branches-ignore: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dev-checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Go build, vet and test
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      CGO_ENABLED: '0'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      - name: Set up Go
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: go.mod
+
+      - name: Build
+        run: go build -trimpath -o /dev/null ./app/backend/cmd/holyarrs
+
+      - name: Vet
+        run: go vet ./...
+
+      - name: Test
+        run: go test -timeout 25m ./...
+
+  frontend:
+    name: Frontend unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: app/frontend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      - name: Install
+        run: npm ci --ignore-scripts --no-audit --no-fund
+
+      - name: Test
+        run: npm test
