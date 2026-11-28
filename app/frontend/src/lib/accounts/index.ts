@@ -74,3 +74,5 @@ export type { ThemeChoice } from './theme.svelte.ts';
 export type { Way } from './signin-art.ts';
 export { createSigninWays } from './signin-ways.svelte.ts';
 export { playerStatus, loadPlayerStatus, playerPins } from './player-status.svelte.ts';
+export { default as LinkLogo } from './LinkLogo.svelte';
+export { hasLinkLogo } from './media-link.ts';

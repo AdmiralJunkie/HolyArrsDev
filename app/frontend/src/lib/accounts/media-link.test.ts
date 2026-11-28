@@ -147,3 +147,10 @@ describe('Linked sign-ins wording and Broken (HolyArrsDev)', () => {
 		expect(mine).toMatch(/\{#if problem === 'gone' \|\| problem === 'offline'\}<span class="chip fail"[^>]*>\{t\('health\.state\.broken'\)\}<\/span>\{\/if\}/);
 	});
 });
+
+describe('Media servers cards show the brand mark (HolyArrsDev)', () => {
+	const page = readFileSync(new URL('../../routes/settings/media-servers/+page.svelte', import.meta.url), 'utf8');
+	it('puts the logo before the name and keeps the chip only for kinds without one', () => {
+		expect(page).toMatch(/\{#if hasLinkLogo\(m\.kind\)\}<LinkLogo kind=\{m\.kind\} size=\{20\} label=\{kindWord\[m\.kind\]\} \/>\{\/if\}\s*<h2 class="h3">\{m\.name\}<\/h2>\s*\{#if !hasLinkLogo\(m\.kind\)\}<span class="chip">/);
+	});
+});

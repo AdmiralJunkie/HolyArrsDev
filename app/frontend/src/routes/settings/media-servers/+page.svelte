@@ -15,6 +15,7 @@
 	import IconButton from '#lib/ui/IconButton.svelte';
 	import TestTag from '#lib/ui/TestTag.svelte';
 	import { PlexServerPick, type MediaServerView } from '#lib/mediaservers/index.ts';
+	import { LinkLogo, hasLinkLogo } from '#lib/accounts/index.ts';
 	import { onMount } from 'svelte';
 	import { api } from '#lib/core/api.ts';
 	import { recheckSettingsStatus } from '#lib/alerts/index.ts';
@@ -401,8 +402,10 @@
 		{#each withoutEditing(servers, editing?.id) as m (m.id)}
 			<li class="card" data-testid="media-server" data-edit-row={m.id}>
 				<div class="head">
+					<!-- HolyArrsDev: the brand mark before the name says the kind (as in Linked sign-ins); kinds without one keep the chip. -->
+					{#if hasLinkLogo(m.kind)}<LinkLogo kind={m.kind} size={20} label={kindWord[m.kind]} />{/if}
 					<h2 class="h3">{m.name}</h2>
-					<span class="chip">{kindWord[m.kind]}</span>
+					{#if !hasLinkLogo(m.kind)}<span class="chip">{kindWord[m.kind]}</span>{/if}
 					{#if !m.enabled}<span class="chip">{t('settings.mediaServers.off')}</span>{/if}
 					{#if results[m.id]}<TestTag ok={results[m.id].ok} text={results[m.id].text} hover={results[m.id].hover} app={kindWord[m.kind]} extra={results[m.id].extra} testid="media-test" />{/if}
 				</div>
@@ -516,6 +519,8 @@
 		gap: var(--s-3);
 		flex-wrap: wrap;
 	}
+	/* The header's gap already spaces the brand mark from the name. */
+	.head > :global(.link-logo) { margin-inline-end: 0; }
 	.addr {
 		overflow-wrap: anywhere;
 	}

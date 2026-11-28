@@ -37,3 +37,6 @@ export function linkProblem(l: MediaLink, servers: MediaServer[], playerLost: bo
 export function accountIssues(links: MediaLink[], servers: MediaServer[], playerLost: boolean): number {
 	return links.filter((l) => linkProblem(l, servers, playerLost)).length;
 }
+
+/** Kinds that LinkLogo draws a brand mark for (others keep their words, as a chip). */
+export const hasLinkLogo = (kind: string) => kind === 'plex' || kind === 'jellyfin' || kind === 'emby' || kind === 'kodi';
