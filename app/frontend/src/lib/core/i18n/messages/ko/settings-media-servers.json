@@ -3,6 +3,8 @@
 	"settings.mediaServers.libraryOne": "라이브러리 {n}개",
 	"settings.mediaServers.libraryOther": "라이브러리 {n}개",
 	"settings.mediaServers.confirmRemove": "{name}을(를) 삭제할까요? 더 이상 업데이트를 받지 않습니다.",
+	"settings.mediaServers.removeLinkedMany": "{count} people have linked their Jellyfin accounts. Removing the last Jellyfin server ends playing in HolyArrs for all of them, and each will need to reconnect in My account once a Jellyfin server is added again.",
+	"settings.mediaServers.removeLinkedOne": "1 person has linked their Jellyfin account. Removing the last Jellyfin server ends playing in HolyArrs for them, and they will need to reconnect in My account once a Jellyfin server is added again.",
 	"settings.mediaServers.couldntRemove": "미디어 서버를 삭제할 수 없습니다",
 	"settings.mediaServers.imports": "가져오기",
 	"settings.mediaServers.renames": "이름 변경",

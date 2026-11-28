@@ -262,8 +262,18 @@
 		}
 	}
 
+	// HolyArrsDev: removing the last Jellyfin server ends everyone's sign-in for playing in HolyArrs, so say how many
+	// people have linked a Jellyfin account. Read from the people list; nothing is said if that cannot be read.
+	async function removeWarning(m: MediaServerView): Promise<string> {
+		if (m.kind !== 'jellyfin' || servers.some((s) => s.id !== m.id && s.kind === 'jellyfin' && s.enabled)) return '';
+		const r = await api.get<{ users: { links?: { provider: string }[] }[] }>('/users').catch(() => null);
+		const n = (r?.users ?? []).filter((u) => u.links?.some((l) => l.provider === 'jellyfin')).length;
+		return n === 0 ? '' : n === 1 ? t('settings.mediaServers.removeLinkedOne') : t('settings.mediaServers.removeLinkedMany', { count: n });
+	}
+
 	async function remove(m: MediaServerView) {
-		if (!(await ask(t('settings.mediaServers.confirmRemove', { name: m.name }), { yes: t('ui.ask.remove'), danger: true }))) return;
+		const warn = await removeWarning(m);
+		if (!(await ask(t('settings.mediaServers.confirmRemove', { name: m.name }), { yes: t('ui.ask.remove'), danger: true, warn }))) return;
 		try {
 			await api.del(`/media-servers/${m.id}`);
 			await load();

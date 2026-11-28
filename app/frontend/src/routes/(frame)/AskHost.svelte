@@ -9,9 +9,11 @@
 	let said = $state('');
 	let yes = $state('');
 	let danger = $state(false);
+	let warn = $state('');
 	$effect(() => {
 		if (asking.now) {
 			said = asking.now.message;
+			warn = asking.now.warn ?? '';
 			yes = asking.now.yes || t('ui.confirm.confirm');
 			danger = asking.now.danger;
 			open = true;
@@ -25,6 +27,7 @@
 
 <Sheet bind:open title={t('ui.confirm.confirm')} hideTitle size="sm" placement="center" onclose={() => asking.now && answer(false)}>
 	<p class="ask-text" data-testid="ask-text">{said}</p>
+	{#if warn}<p class="ask-warn" data-testid="ask-warn">{warn}</p>{/if}
 	{#snippet footer()}
 		<Button variant="secondary" onclick={() => done(false)} data-testid="ask-no">{t('ui.confirm.cancel')}</Button>
 		<Button variant={danger ? 'destructive' : 'primary'} onclick={() => done(true)} data-testid="ask-yes">{yes}</Button>
@@ -33,4 +36,5 @@
 
 <style>
 	.ask-text { font: var(--t-body); color: var(--text); white-space: pre-line; }
+	.ask-warn { margin-top: 8px; font: 500 13px/1.4 var(--font-ui); color: var(--fail-text, var(--fail)); }
 </style>

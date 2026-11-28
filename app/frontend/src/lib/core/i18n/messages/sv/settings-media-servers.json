@@ -3,6 +3,8 @@
 	"settings.mediaServers.libraryOne": "{n} bibliotek",
 	"settings.mediaServers.libraryOther": "{n} bibliotek",
 	"settings.mediaServers.confirmRemove": "Ta bort {name}? Den slutar få uppdateringar.",
+	"settings.mediaServers.removeLinkedMany": "{count} people have linked their Jellyfin accounts. Removing the last Jellyfin server ends playing in HolyArrs for all of them, and each will need to reconnect in My account once a Jellyfin server is added again.",
+	"settings.mediaServers.removeLinkedOne": "1 person has linked their Jellyfin account. Removing the last Jellyfin server ends playing in HolyArrs for them, and they will need to reconnect in My account once a Jellyfin server is added again.",
 	"settings.mediaServers.couldntRemove": "Det gick inte att ta bort mediaservern",
 	"settings.mediaServers.imports": "importer",
 	"settings.mediaServers.renames": "namnbyten",
