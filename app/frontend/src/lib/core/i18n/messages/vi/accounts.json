@@ -413,6 +413,7 @@
 	"accounts.watch.problemOffline": "The {server} server is not answering",
 	"accounts.watch.problemReconnect": "Your sign-in for playing here ended. Reconnect to play again.",
 	"accounts.watch.reconnect": "Reconnect",
+	"accounts.watch.linkLine": "{server} \u00b7 {name}",
 	"accounts.login.importPaused": "Phiên đăng nhập của bạn đã hết nên lượt nhập đã tạm dừng. Hãy đăng nhập, mở Nhập một thư viện và nhấn Quét để tiếp tục.",
 	"accounts.forgot.link": "Quên mật khẩu?",
 	"accounts.forgot.title": "Đặt lại chủ sở hữu",

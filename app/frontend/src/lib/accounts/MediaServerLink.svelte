@@ -91,9 +91,11 @@
 			{@const problem = linkProblem(l, servers, playerStatus.lost)}
 			<li class:gone={problem === 'gone' || problem === 'offline'}>
 				<span class="what">
-					<span class="small"><LinkLogo kind={l.provider} />{t('accounts.watch.as', { server: kindWord(l.provider), name: l.name })}{#if problem === 'gone'}{` · ${t('accounts.watch.serverGone')}`}{:else if problem === 'offline'}{` · ${t('accounts.watch.serverOffline')}`}{:else if l.kept}{` · ${t('accounts.watch.keptForPlayback')}`}{/if}</span>
+					<span class="small"><LinkLogo kind={l.provider} />{t('accounts.watch.linkLine', { server: kindWord(l.provider), name: l.name })}{#if !problem && l.kept}{` · ${t('accounts.watch.keptForPlayback')}`}{/if}</span>
 					{#if problem}<span class="why" data-testid="media-link-why">{why(problem, l.provider)}</span>{/if}
 				</span>
+				<!-- Broken, as Settings > Health checks marks a failing check. -->
+				{#if problem === 'gone' || problem === 'offline'}<span class="chip fail" data-testid="media-link-broken">{t('health.state.broken')}</span>{/if}
 				{#if problem === 'reconnect' && unlinking !== l.provider}
 					<Button variant="secondary" type="button" onclick={() => reconnect(l)} data-testid="media-link-reconnect">{t('accounts.watch.reconnect')}</Button>
 				{/if}

@@ -413,6 +413,7 @@
 	"accounts.watch.problemOffline": "The {server} server is not answering",
 	"accounts.watch.problemReconnect": "Your sign-in for playing here ended. Reconnect to play again.",
 	"accounts.watch.reconnect": "Reconnect",
+	"accounts.watch.linkLine": "{server} \u00b7 {name}",
 	"accounts.login.importPaused": "로그인이 끝나서 가져오기가 일시 중지되었습니다. 로그인한 뒤 라이브러리 가져오기을 열고 스캔을 눌러 계속하세요.",
 	"accounts.forgot.link": "비밀번호를 잊으셨나요?",
 	"accounts.forgot.title": "소유자 재설정",

@@ -413,6 +413,7 @@
 	"accounts.watch.problemOffline": "The {server} server is not answering",
 	"accounts.watch.problemReconnect": "Your sign-in for playing here ended. Reconnect to play again.",
 	"accounts.watch.reconnect": "Reconnect",
+	"accounts.watch.linkLine": "{server} \u00b7 {name}",
 	"accounts.login.importPaused": "Autentificarea ta a expirat, așa că importul s-a oprit temporar. Autentifică-te, deschide Importă o bibliotecă și apasă Scanează ca să continue.",
 	"accounts.forgot.link": "Ai uitat parola?",
 	"accounts.forgot.title": "Resetează proprietarul",

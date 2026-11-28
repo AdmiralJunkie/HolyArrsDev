@@ -40,7 +40,7 @@ describe('My account: keep a Jellyfin sign-in for the player (HolyArrsDev)', () 
 		expect(mine).toMatch(/if \(open\.kind === 'jellyfin'\) body\.keep_for_playback = keep;/);
 	});
 	it('says when a link keeps a sign-in for playing here', () => {
-		expect(mine).toMatch(/\{:else if l\.kept\}\{` · \$\{t\('accounts\.watch\.keptForPlayback'\)\}`\}\{\/if\}/);
+		expect(mine).toMatch(/\{#if !problem && l\.kept\}\{` · \$\{t\('accounts\.watch\.keptForPlayback'\)\}`\}\{\/if\}/);
 	});
 });
 
@@ -135,5 +135,15 @@ describe('My account pill (HolyArrsDev)', () => {
 	const settingsLayout = readFileSync(new URL('../../routes/settings/+layout.svelte', import.meta.url), 'utf8');
 	it('shows how many of my links need attention at the top of My account', () => {
 		expect(settingsLayout).toMatch(/currentSection\?\.href === '\/settings\/account' && playerStatus\.issues > 0\}[\s\S]*?<StatusPill kind="failed" label=\{stateWords\(\{ state: 'attention', count: playerStatus\.issues \}\)\}/);
+	});
+});
+
+describe('Linked sign-ins wording and Broken (HolyArrsDev)', () => {
+	it('reads "<server> · <name>" for media and Plex links', () => {
+		expect(mine).toMatch(/t\('accounts\.watch\.linkLine', \{ server: kindWord\(l\.provider\), name: l\.name \}\)/);
+		expect(security).toMatch(/t\('accounts\.watch\.linkLine', \{ server: 'Plex', name: plexMine\.name \}\)/);
+	});
+	it('marks a removed or offline server Broken, as Health checks do', () => {
+		expect(mine).toMatch(/\{#if problem === 'gone' \|\| problem === 'offline'\}<span class="chip fail"[^>]*>\{t\('health\.state\.broken'\)\}<\/span>\{\/if\}/);
 	});
 });

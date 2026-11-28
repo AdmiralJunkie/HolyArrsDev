@@ -413,6 +413,7 @@
 	"accounts.watch.problemOffline": "The {server} server is not answering",
 	"accounts.watch.problemReconnect": "Your sign-in for playing here ended. Reconnect to play again.",
 	"accounts.watch.reconnect": "Reconnect",
+	"accounts.watch.linkLine": "{server} \u00b7 {name}",
 	"accounts.login.importPaused": "Dit login udløb, så importen er sat på pause. Log ind, åbn Importér et bibliotek, og tryk på Scan for at fortsætte.",
 	"accounts.forgot.link": "Glemt adgangskode?",
 	"accounts.forgot.title": "Nulstil ejeren",

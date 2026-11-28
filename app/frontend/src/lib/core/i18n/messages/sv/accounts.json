@@ -413,6 +413,7 @@
 	"accounts.watch.problemOffline": "The {server} server is not answering",
 	"accounts.watch.problemReconnect": "Your sign-in for playing here ended. Reconnect to play again.",
 	"accounts.watch.reconnect": "Reconnect",
+	"accounts.watch.linkLine": "{server} \u00b7 {name}",
 	"accounts.login.importPaused": "Din inloggning tog slut, så importen är pausad. Logga in, öppna Importera ett bibliotek och tryck på Skanna för att fortsätta.",
 	"accounts.forgot.link": "Glömt lösenordet?",
 	"accounts.forgot.title": "Återställ ägaren",

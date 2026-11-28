@@ -413,6 +413,7 @@
 	"accounts.watch.problemOffline": "The {server} server is not answering",
 	"accounts.watch.problemReconnect": "Your sign-in for playing here ended. Reconnect to play again.",
 	"accounts.watch.reconnect": "Reconnect",
+	"accounts.watch.linkLine": "{server} \u00b7 {name}",
 	"accounts.login.importPaused": "Пријава ти је истекла, па је увоз паузиран. Пријави се, отвори Увези библиотеку и притисни Скенирај за наставак.",
 	"accounts.forgot.link": "Заборављена лозинка?",
 	"accounts.forgot.title": "Ресетуј власника",

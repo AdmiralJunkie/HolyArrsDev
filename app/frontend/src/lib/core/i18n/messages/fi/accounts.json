@@ -413,6 +413,7 @@
 	"accounts.watch.problemOffline": "The {server} server is not answering",
 	"accounts.watch.problemReconnect": "Your sign-in for playing here ended. Reconnect to play again.",
 	"accounts.watch.reconnect": "Reconnect",
+	"accounts.watch.linkLine": "{server} \u00b7 {name}",
 	"accounts.login.importPaused": "Kirjautumisesi päättyi, joten tuonti keskeytyi. Kirjaudu sisään, avaa Tuo kirjasto ja jatka painamalla Skannaa.",
 	"accounts.forgot.link": "Unohtuiko salasana?",
 	"accounts.forgot.title": "Palauta omistaja",

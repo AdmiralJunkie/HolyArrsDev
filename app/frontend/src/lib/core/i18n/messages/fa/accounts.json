@@ -413,6 +413,7 @@
 	"accounts.watch.problemOffline": "The {server} server is not answering",
 	"accounts.watch.problemReconnect": "Your sign-in for playing here ended. Reconnect to play again.",
 	"accounts.watch.reconnect": "Reconnect",
+	"accounts.watch.linkLine": "{server} \u00b7 {name}",
 	"accounts.login.importPaused": "ورودت به پایان رسید، پس درون‌ریزی متوقف شد. وارد شو، ورود یک کتابخانه را باز کن و برای ادامه اسکن را بزن.",
 	"accounts.forgot.link": "رمز را فراموش کرده‌اید؟",
 	"accounts.forgot.title": "بازنشانی مالک",

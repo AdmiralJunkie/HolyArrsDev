@@ -350,7 +350,7 @@
 			{#if plexMine?.linked}
 				<ul class="below my-links" data-testid="my-plex-link">
 					<li>
-						<span class="small"><LinkLogo kind="plex" />{plexMine.name ? t('accounts.security.plexAs', { name: plexMine.name }) : 'Plex'}</span>
+						<span class="small"><LinkLogo kind="plex" />{plexMine.name ? t('accounts.watch.linkLine', { server: 'Plex', name: plexMine.name }) : 'Plex'}</span>
 						{#if !session.s.hasPassword}
 							<span class="xs muted" data-testid="plex-needs-password">{t('accounts.security.needsPasswordLabel')}</span>
 						{:else if plexUnlinking}

@@ -413,6 +413,7 @@
 	"accounts.watch.problemOffline": "The {server} server is not answering",
 	"accounts.watch.problemReconnect": "Your sign-in for playing here ended. Reconnect to play again.",
 	"accounts.watch.reconnect": "Reconnect",
+	"accounts.watch.linkLine": "{server} \u00b7 {name}",
 	"accounts.login.importPaused": "Baigėsi jūsų prisijungimas, todėl importas pristabdytas. Prisijunkite, atverkite „Importuoti biblioteką“ ir paspauskite „Nuskaityti“, kad tęstumėte.",
 	"accounts.forgot.link": "Pamiršote slaptažodį?",
 	"accounts.forgot.title": "Atkurti savininką",

@@ -413,6 +413,7 @@
 	"accounts.watch.problemOffline": "The {server} server is not answering",
 	"accounts.watch.problemReconnect": "Your sign-in for playing here ended. Reconnect to play again.",
 	"accounts.watch.reconnect": "Reconnect",
+	"accounts.watch.linkLine": "{server} \u00b7 {name}",
 	"accounts.login.importPaused": "Sinu sisselogimine lõppes, seega import peatus. Logi sisse, ava Impordi meediakogu ja vajuta jätkamiseks Skanni.",
 	"accounts.forgot.link": "Unustasid parooli?",
 	"accounts.forgot.title": "Lähtesta omanik",

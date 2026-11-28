@@ -413,6 +413,7 @@
 	"accounts.watch.problemOffline": "The {server} server is not answering",
 	"accounts.watch.problemReconnect": "Your sign-in for playing here ended. Reconnect to play again.",
 	"accounts.watch.reconnect": "Reconnect",
+	"accounts.watch.linkLine": "{server} \u00b7 {name}",
 	"accounts.login.importPaused": "ההתחברות שלך הסתיימה, ולכן הייבוא הושהה. התחבר, פתח את ייבוא ספרייה ולחץ על סריקה כדי להמשיך.",
 	"accounts.forgot.link": "שכחת סיסמה?",
 	"accounts.forgot.title": "איפוס הבעלים",

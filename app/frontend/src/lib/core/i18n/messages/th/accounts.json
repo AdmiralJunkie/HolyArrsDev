@@ -413,6 +413,7 @@
 	"accounts.watch.problemOffline": "The {server} server is not answering",
 	"accounts.watch.problemReconnect": "Your sign-in for playing here ended. Reconnect to play again.",
 	"accounts.watch.reconnect": "Reconnect",
+	"accounts.watch.linkLine": "{server} \u00b7 {name}",
 	"accounts.login.importPaused": "การลงชื่อเข้าใช้ของคุณหมดอายุ การนำเข้าจึงหยุดชั่วคราว ลงชื่อเข้าใช้ เปิด นำเข้าไลบรารี แล้วกด สแกน เพื่อทำต่อ",
 	"accounts.forgot.link": "ลืมรหัสผ่าน?",
 	"accounts.forgot.title": "รีเซ็ตเจ้าของ",

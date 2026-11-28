@@ -413,6 +413,7 @@
 	"accounts.watch.problemOffline": "The {server} server is not answering",
 	"accounts.watch.problemReconnect": "Your sign-in for playing here ended. Reconnect to play again.",
 	"accounts.watch.reconnect": "Reconnect",
+	"accounts.watch.linkLine": "{server} \u00b7 {name}",
 	"accounts.login.importPaused": "你的登录已结束，所以导入已暂停。请登录，打开“导入媒体库”并按“扫描”继续。",
 	"accounts.forgot.link": "忘记密码?",
 	"accounts.forgot.title": "重置所有者",

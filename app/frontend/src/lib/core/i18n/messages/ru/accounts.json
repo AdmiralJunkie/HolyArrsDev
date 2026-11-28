@@ -413,6 +413,7 @@
 	"accounts.watch.problemOffline": "The {server} server is not answering",
 	"accounts.watch.problemReconnect": "Your sign-in for playing here ended. Reconnect to play again.",
 	"accounts.watch.reconnect": "Reconnect",
+	"accounts.watch.linkLine": "{server} \u00b7 {name}",
 	"accounts.login.importPaused": "Ваш вход закончился, поэтому импорт приостановлен. Войдите, откройте «Импорт медиатеки» и нажмите «Сканировать», чтобы продолжить.",
 	"accounts.forgot.link": "Забыли пароль?",
 	"accounts.forgot.title": "Сброс владельца",

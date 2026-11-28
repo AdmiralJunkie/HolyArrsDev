@@ -413,6 +413,7 @@
 	"accounts.watch.problemOffline": "The {server} server is not answering",
 	"accounts.watch.problemReconnect": "Your sign-in for playing here ended. Reconnect to play again.",
 	"accounts.watch.reconnect": "Reconnect",
+	"accounts.watch.linkLine": "{server} \u00b7 {name}",
 	"accounts.login.importPaused": "Tava pierakstīšanās beidzās, tāpēc imports ir apturēts. Pieraksties, atver Importēt bibliotēku un nospied Skenēt, lai turpinātu.",
 	"accounts.forgot.link": "Aizmirsi paroli?",
 	"accounts.forgot.title": "Atiestatīt īpašnieku",

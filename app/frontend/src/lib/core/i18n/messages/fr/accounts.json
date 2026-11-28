@@ -413,6 +413,7 @@
 	"accounts.watch.problemOffline": "The {server} server is not answering",
 	"accounts.watch.problemReconnect": "Your sign-in for playing here ended. Reconnect to play again.",
 	"accounts.watch.reconnect": "Reconnect",
+	"accounts.watch.linkLine": "{server} \u00b7 {name}",
 	"accounts.login.importPaused": "Votre connexion a pris fin, donc l'import est en pause. Connectez-vous, ouvrez Importer une bibliothèque et appuyez sur Analyser pour continuer.",
 	"accounts.forgot.link": "Mot de passe oublié ?",
 	"accounts.forgot.title": "Réinitialiser le propriétaire",

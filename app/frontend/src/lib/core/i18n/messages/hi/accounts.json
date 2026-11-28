@@ -413,6 +413,7 @@
 	"accounts.watch.problemOffline": "The {server} server is not answering",
 	"accounts.watch.problemReconnect": "Your sign-in for playing here ended. Reconnect to play again.",
 	"accounts.watch.reconnect": "Reconnect",
+	"accounts.watch.linkLine": "{server} \u00b7 {name}",
 	"accounts.login.importPaused": "आपका साइन-इन खत्म हो गया, इसलिए इम्पोर्ट रुक गया है। साइन इन करें, लाइब्रेरी इंपोर्ट करें खोलें और जारी रखने के लिए स्कैन करें दबाएँ।",
 	"accounts.forgot.link": "पासवर्ड भूल गए?",
 	"accounts.forgot.title": "मालिक रीसेट करें",
